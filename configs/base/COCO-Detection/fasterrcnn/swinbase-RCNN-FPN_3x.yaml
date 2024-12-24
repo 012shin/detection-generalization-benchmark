@@ -1,0 +1,13 @@
+_BASE_: "Base-RCNN-FPN.yaml"
+MODEL:
+  WEIGHTS: "/home/god01/detection/DiffusionDet/models/swin_base_patch4_window7_224_22k.pkl"
+  MASK_ON: False
+  BACKBONE:
+    NAME: build_swintransformer_fpn_backbone
+  SWIN:
+    SIZE: B
+  FPN:
+    IN_FEATURES: ["swin0", "swin1", "swin2", "swin3" ]
+SOLVER:
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000

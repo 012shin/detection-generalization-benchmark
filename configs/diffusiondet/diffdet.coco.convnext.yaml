@@ -1,0 +1,28 @@
+_BASE_: "Base-DiffusionDet.yaml"
+MODEL:
+  MASK_ON: True
+  WEIGHTS:
+    "models/convnext_base_22k_224.pkl"
+  BACKBONE:
+    NAME: "build_convnext_fpn_backbone"
+  CONVNEXT:
+    DEPTHS: [3, 3, 27, 3]
+    DIMS: [128, 256, 512, 1024]
+    DROP_PATH_RATE: 0.7
+    LAYER_SCALE_INIT_VALUE: 1.0
+    OUT_FEATURES: [0, 1, 2, 3]
+  FPN:
+    IN_FEATURES: [0, 1, 2, 3]
+  DiffusionDet:
+    NUM_PROPOSALS: 300
+    NUM_CLASSES: 80
+DATASETS:
+  TRAIN: ("coco_2017_train",)
+  TEST:  ("coco_2017_val",)
+SOLVER:
+  STEPS: (350000, 420000)
+  MAX_ITER: 450000
+INPUT:
+  CROP:
+    ENABLED: True
+  FORMAT: "RGB"
