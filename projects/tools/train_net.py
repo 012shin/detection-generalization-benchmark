@@ -39,6 +39,7 @@ from detectron2.evaluation import (
 )
 from detectron2.modeling import GeneralizedRCNNWithTTA
 
+# from src.data import SparseRCNNDatasetMapper
 from src.config import get_cfg
 from src.modeling.meta_arch import DiffusionDetDatasetMapper
 
@@ -102,7 +103,7 @@ class Trainer(DefaultTrainer):
     @classmethod
     def build_train_loader(cls, cfg): # 이 부분으로 detector 별 datasetmapper를 적용시킬 수 있을거같음
         if cfg.MODEL.META_ARCHITECTURE in ["SparseRCNN", "DiffusionDet"]:
-            mapper = SparseRCNNDatasetMapper(cfg, is_train=True)
+            mapper = DiffusionDetDatasetMapper(cfg, is_train=True)
             return build_detection_train_loader(cfg, mapper=mapper) 
         else:
             return build_detection_train_loader(cfg)
