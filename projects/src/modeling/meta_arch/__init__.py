@@ -1,4 +1,3 @@
-from .fcos import FCOS
 from .one_stage_detector import OneStageDetector
 
 _EXCLUDE = {"torch", "ShapeSpec"}

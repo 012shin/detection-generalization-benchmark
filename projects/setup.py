@@ -60,10 +60,10 @@ def get_extensions():
 
 
 setup(
-    name="Domaingen",
+    name="detection-generalization-benchmark",
     version="0.6",
     author="Korea_UTL",
-    url="https://github.com/012shin/domaingen.git",
+    url="https://github.com/012shin/detection-generalization-benchmark.git",
     packages=find_packages(exclude=("configs", "tests")),
     python_requires=">=3.6",
     install_requires=[

@@ -17,8 +17,10 @@ import numpy as np
 
 from detectron2.modeling.backbone import Backbone
 from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
-from detectron2.modeling.backbone.fpn import FPN, LastLevelMaxPool, LastLevelP6P7
-from detectron2.layers import ShapeSpec
+from detectron2.modeling.backbone.fpn import FPN
+
+
+__all__ = ["build_convnext_backbone"]
 
 class Block(nn.Module):
     r""" ConvNeXt Block. There are two equivalent implementations:
@@ -205,24 +207,3 @@ def build_convnext_backbone(cfg, input_shape):
         layer_scale_init_value=cfg.MODEL.CONVNEXT.LAYER_SCALE_INIT_VALUE,
         out_features=cfg.MODEL.CONVNEXT.OUT_FEATURES
     )
-
-@BACKBONE_REGISTRY.register()
-def build_convnext_fpn_backbone(cfg, input_shape: ShapeSpec):
-    """
-    Args:
-        cfg: a detectron2 CfgNode
-    Returns:
-        backbone (Backbone): backbone module, must be a subclass of :class:`Backbone`.
-    """
-    bottom_up = build_convnext_backbone(cfg, input_shape)
-    in_features = cfg.MODEL.FPN.IN_FEATURES
-    out_channels = cfg.MODEL.FPN.OUT_CHANNELS
-    backbone = FPN(
-        bottom_up=bottom_up,
-        in_features=in_features,
-        out_channels=out_channels,
-        norm=cfg.MODEL.FPN.NORM,
-        top_block=LastLevelMaxPool(),
-        fuse_type=cfg.MODEL.FPN.FUSE_TYPE,
-    )
-    return backbone

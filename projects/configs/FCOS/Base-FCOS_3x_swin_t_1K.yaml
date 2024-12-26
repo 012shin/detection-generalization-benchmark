@@ -1,0 +1,27 @@
+MODEL:
+  META_ARCHITECTURE: "OneStageDetector"
+  BACKBONE:
+    NAME: build_swintransformer_fpn_backbone
+  SWIN:
+    SIZE: T
+  FPN:
+    IN_FEATURES: ["p0", "p1", "p2", "p3" ]
+  PROPOSAL_GENERATOR:
+    NAME: "FCOS"
+  WEIGHTS: "/home/huiwon/detection/detectron2/models/swin_tiny_patch4_window7_224.pkl"
+  # PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
+  FCOS:
+    IN_FEATURES : ["p2", "p3", "p4", "p5", "p6"]
+    FPN_STRIDES : [4, 8, 16, 32, 64]
+DATASETS:
+  TRAIN: ("coco_2017_train",)
+  TEST: ("coco_2017_val",)
+SOLVER:
+  IMS_PER_BATCH: 16
+  BASE_LR: 0.01  # Note that RetinaNet uses a different default learning rate
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000
+INPUT:
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+TEST: 
+  EVAL_PERIOD: 5000

@@ -6,8 +6,9 @@ from detectron2.modeling.backbone import FPN, build_resnet_backbone
 from detectron2.layers import ShapeSpec
 from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
 from .swintransformer import build_swintransformer_backbone
+from .convnext import build_convnext_backbone
 
-__all__ = ["build_fcos_resnet_fpn_backbone", "build_swintransformer_fpn_backbone"]
+__all__ = ["build_fcos_resnet_fpn_backbone", "build_swintransformer_fpn_backbone, build_convnext_fpn_backbone"]
 
 class LastLevelMaxPool(nn.Module):
     """
@@ -104,6 +105,27 @@ def build_swintransformer_fpn_backbone(cfg, input_shape: ShapeSpec):
         out_channels=out_channels,
         norm=cfg.MODEL.FPN.NORM,
         # top_block=LastLevelP6P7_P5(out_channels, out_channels),
+        top_block=LastLevelMaxPool(),
+        fuse_type=cfg.MODEL.FPN.FUSE_TYPE,
+    )
+    return backbone
+
+@BACKBONE_REGISTRY.register()
+def build_convnext_fpn_backbone(cfg, input_shape: ShapeSpec):
+    """
+    Args:
+        cfg: a detectron2 CfgNode
+    Returns:
+        backbone (Backbone): backbone module, must be a subclass of :class:`Backbone`.
+    """
+    bottom_up = build_convnext_backbone(cfg, input_shape)
+    in_features = cfg.MODEL.FPN.IN_FEATURES
+    out_channels = cfg.MODEL.FPN.OUT_CHANNELS
+    backbone = FPN(
+        bottom_up=bottom_up,
+        in_features=in_features,
+        out_channels=out_channels,
+        norm=cfg.MODEL.FPN.NORM,
         top_block=LastLevelMaxPool(),
         fuse_type=cfg.MODEL.FPN.FUSE_TYPE,
     )

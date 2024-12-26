@@ -25,6 +25,8 @@ from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
 
 _to_2tuple = nn.modules.utils._ntuple(2)
 
+__all__ = ["build_swintransformer_backbone"]
+
 size2config = {
     'T': {
         'window_size': 7,
