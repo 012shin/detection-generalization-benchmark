@@ -1,0 +1,533 @@
+[12/26 15:39:40] detectron2 INFO: Rank of current process: 2. World size: 8
+[12/26 15:39:53] detectron2 INFO: Environment info:
+-------------------------------  ----------------------------------------------------------------------------------------
+sys.platform                     linux
+Python                           3.10.0 (default, Mar  3 2022, 09:58:08) [GCC 7.5.0]
+numpy                            2.2.1
+detectron2                       0.6 @/home/god01/detection/detection-generalization-benchmark/detectron2/detectron2
+Compiler                         GCC 11.4
+CUDA compiler                    CUDA 12.5
+detectron2 arch flags            8.9
+DETECTRON2_ENV_MODULE            <not set>
+PyTorch                          2.5.1+cu124 @/home/god01/.conda/envs/detectron/lib/python3.10/site-packages/torch
+PyTorch debug build              False
+torch._C._GLIBCXX_USE_CXX11_ABI  False
+GPU available                    Yes
+GPU 0,1,2,3,4,5,6,7              NVIDIA RTX 6000 Ada Generation (arch=8.9)
+Driver version                   550.100
+CUDA_HOME                        /usr/local/cuda-12.5
+Pillow                           11.0.0
+torchvision                      0.20.1+cu124 @/home/god01/.conda/envs/detectron/lib/python3.10/site-packages/torchvision
+torchvision arch flags           5.0, 6.0, 7.0, 7.5, 8.0, 8.6, 9.0
+fvcore                           0.1.5.post20221221
+iopath                           0.1.9
+cv2                              Not found
+-------------------------------  ----------------------------------------------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.5.3 (Git Hash 66f0cb9eb66affd2da3bf5f8d897376f04aae6af)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX512
+  - CUDA Runtime 12.4
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 90.1
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=12.4, CUDNN_VERSION=9.1.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DLIBKINETO_NOXPUPTI=ON -DUSE_FBGEMM -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wsuggest-override -Wno-psabi -Wno-error=old-style-cast -Wno-missing-braces -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.5.1, USE_CUDA=ON, USE_CUDNN=ON, USE_CUSPARSELT=1, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, 
+
+[12/26 15:39:53] detectron2 INFO: Command line arguments: Namespace(config_file='/home/god01/detection/detection-generalization-benchmark/projects/configs/FCOS/FCOS_3x_convnext_t_1K.yaml', resume=False, eval_only=False, num_gpus=8, num_machines=1, machine_rank=0, dist_url='tcp://127.0.0.1:50162', opts=[])
+[12/26 15:39:53] detectron2 INFO: Contents of args.config_file=/home/god01/detection/detection-generalization-benchmark/projects/configs/FCOS/FCOS_3x_convnext_t_1K.yaml:
+_BASE_: "Base-FCOS_1x.yaml"
+MODEL:
+  MASK_ON: False
+  WEIGHTS: "/home/god01/detection/DiffusionDet/models/convnext_tiny_1k_224_ema.pkl"
+  BACKBONE:
+    NAME: "build_convnext_fpn_backbone"
+  CONVNEXT:
+    DEPTHS: [3, 3, 9, 3]
+    DIMS: [96, 192, 384, 768]
+    DROP_PATH_RATE: 0.2
+    LAYER_SCALE_INIT_VALUE: 1e-6
+    OUT_FEATURES: [0, 1, 2, 3]
+  FPN:
+    IN_FEATURES: [0, 1, 2, 3]
+SOLVER:
+  BASE_LR: 0.0025
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000
+  WEIGHT_DECAY_RATE: 0.95
+
+[12/26 15:39:53] detectron2.utils.env INFO: Using a generated random seed 55024429
+[12/26 15:46:32] detectron2 INFO: Rank of current process: 2. World size: 4
+[12/26 15:46:39] detectron2 INFO: Environment info:
+-------------------------------  ----------------------------------------------------------------------------------------
+sys.platform                     linux
+Python                           3.10.0 (default, Mar  3 2022, 09:58:08) [GCC 7.5.0]
+numpy                            2.2.1
+detectron2                       0.6 @/home/god01/detection/detection-generalization-benchmark/detectron2/detectron2
+Compiler                         GCC 11.4
+CUDA compiler                    CUDA 12.5
+detectron2 arch flags            8.9
+DETECTRON2_ENV_MODULE            <not set>
+PyTorch                          2.5.1+cu124 @/home/god01/.conda/envs/detectron/lib/python3.10/site-packages/torch
+PyTorch debug build              False
+torch._C._GLIBCXX_USE_CXX11_ABI  False
+GPU available                    Yes
+GPU 0,1,2,3                      NVIDIA RTX 6000 Ada Generation (arch=8.9)
+Driver version                   550.100
+CUDA_HOME                        /usr/local/cuda-12.5
+Pillow                           11.0.0
+torchvision                      0.20.1+cu124 @/home/god01/.conda/envs/detectron/lib/python3.10/site-packages/torchvision
+torchvision arch flags           5.0, 6.0, 7.0, 7.5, 8.0, 8.6, 9.0
+fvcore                           0.1.5.post20221221
+iopath                           0.1.9
+cv2                              Not found
+-------------------------------  ----------------------------------------------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.5.3 (Git Hash 66f0cb9eb66affd2da3bf5f8d897376f04aae6af)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX512
+  - CUDA Runtime 12.4
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 90.1
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=12.4, CUDNN_VERSION=9.1.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DLIBKINETO_NOXPUPTI=ON -DUSE_FBGEMM -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wsuggest-override -Wno-psabi -Wno-error=old-style-cast -Wno-missing-braces -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.5.1, USE_CUDA=ON, USE_CUDNN=ON, USE_CUSPARSELT=1, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, 
+
+[12/26 15:46:39] detectron2 INFO: Command line arguments: Namespace(config_file='/home/god01/detection/detection-generalization-benchmark/projects/configs/FCOS/FCOS_3x_convnext_t_1K.yaml', resume=False, eval_only=False, num_gpus=4, num_machines=1, machine_rank=0, dist_url='tcp://127.0.0.1:50162', opts=[])
+[12/26 15:46:39] detectron2 INFO: Contents of args.config_file=/home/god01/detection/detection-generalization-benchmark/projects/configs/FCOS/FCOS_3x_convnext_t_1K.yaml:
+MODEL:
+  META_ARCHITECTURE: "OneStageDetector"
+  MASK_ON: False
+  WEIGHTS: "/home/god01/detection/DiffusionDet/models/convnext_tiny_1k_224_ema.pkl"
+  BACKBONE:
+    NAME: "build_convnext_fpn_backbone"
+  CONVNEXT:
+    DEPTHS: [3, 3, 9, 3]
+    DIMS: [96, 192, 384, 768]
+    DROP_PATH_RATE: 0.2
+    LAYER_SCALE_INIT_VALUE: 1e-6
+    OUT_FEATURES: [0, 1, 2, 3]
+  FPN:
+    IN_FEATURES: [0, 1, 2, 3]
+  # PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
+  FCOS:
+    IN_FEATURES : ["p2", "p3", "p4", "p5", "p6"]
+    FPN_STRIDES : [4, 8, 16, 32, 64]
+DATASETS:
+  TRAIN: ("coco_2017_train",)
+  TEST: ("coco_2017_val",)
+SOLVER:
+  IMS_PER_BATCH: 16
+  BASE_LR: 0.01  # Note that RetinaNet uses a different default learning rate
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000
+INPUT:
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+TEST: 
+  EVAL_PERIOD: 5000
+
+[12/26 15:46:39] detectron2.utils.env INFO: Using a generated random seed 41073512
+[12/26 15:48:51] detectron2 INFO: Rank of current process: 2. World size: 4
+[12/26 15:48:54] detectron2 INFO: Environment info:
+-------------------------------  ----------------------------------------------------------------------------------------
+sys.platform                     linux
+Python                           3.10.0 (default, Mar  3 2022, 09:58:08) [GCC 7.5.0]
+numpy                            2.2.1
+detectron2                       0.6 @/home/god01/detection/detection-generalization-benchmark/detectron2/detectron2
+Compiler                         GCC 11.4
+CUDA compiler                    CUDA 12.5
+detectron2 arch flags            8.9
+DETECTRON2_ENV_MODULE            <not set>
+PyTorch                          2.5.1+cu124 @/home/god01/.conda/envs/detectron/lib/python3.10/site-packages/torch
+PyTorch debug build              False
+torch._C._GLIBCXX_USE_CXX11_ABI  False
+GPU available                    Yes
+GPU 0,1,2,3                      NVIDIA RTX 6000 Ada Generation (arch=8.9)
+Driver version                   550.100
+CUDA_HOME                        /usr/local/cuda-12.5
+Pillow                           11.0.0
+torchvision                      0.20.1+cu124 @/home/god01/.conda/envs/detectron/lib/python3.10/site-packages/torchvision
+torchvision arch flags           5.0, 6.0, 7.0, 7.5, 8.0, 8.6, 9.0
+fvcore                           0.1.5.post20221221
+iopath                           0.1.9
+cv2                              Not found
+-------------------------------  ----------------------------------------------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.5.3 (Git Hash 66f0cb9eb66affd2da3bf5f8d897376f04aae6af)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX512
+  - CUDA Runtime 12.4
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 90.1
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=12.4, CUDNN_VERSION=9.1.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DLIBKINETO_NOXPUPTI=ON -DUSE_FBGEMM -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wsuggest-override -Wno-psabi -Wno-error=old-style-cast -Wno-missing-braces -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.5.1, USE_CUDA=ON, USE_CUDNN=ON, USE_CUSPARSELT=1, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, 
+
+[12/26 15:48:54] detectron2 INFO: Command line arguments: Namespace(config_file='/home/god01/detection/detection-generalization-benchmark/projects/configs/FCOS/FCOS_3x_convnext_t_1K.yaml', resume=False, eval_only=False, num_gpus=4, num_machines=1, machine_rank=0, dist_url='tcp://127.0.0.1:50162', opts=[])
+[12/26 15:48:54] detectron2 INFO: Contents of args.config_file=/home/god01/detection/detection-generalization-benchmark/projects/configs/FCOS/FCOS_3x_convnext_t_1K.yaml:
+MODEL:
+  META_ARCHITECTURE: "OneStageDetector"
+  WEIGHTS: "/home/god01/detection/DiffusionDet/models/convnext_tiny_1k_224_ema.pkl"
+  BACKBONE:
+    NAME: "build_convnext_fpn_backbone"
+  CONVNEXT:
+    DEPTHS: [3, 3, 9, 3]
+    DIMS: [96, 192, 384, 768]
+    DROP_PATH_RATE: 0.2
+    LAYER_SCALE_INIT_VALUE: 1e-6
+    OUT_FEATURES: [0, 1, 2, 3]
+  FPN:
+    IN_FEATURES: [0, 1, 2, 3]
+  PROPOSAL_GENERATOR:
+    NAME: "FCOS"
+  # PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
+  FCOS:
+    IN_FEATURES : ["p2", "p3", "p4", "p5", "p6"]
+    FPN_STRIDES : [4, 8, 16, 32, 64]
+DATASETS:
+  TRAIN: ("coco_2017_train",)
+  TEST: ("coco_2017_val",)
+SOLVER:
+  IMS_PER_BATCH: 16
+  BASE_LR: 0.01  # Note that RetinaNet uses a different default learning rate
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000
+INPUT:
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+TEST: 
+  EVAL_PERIOD: 5000
+
+[12/26 15:48:54] detectron2.utils.env INFO: Using a generated random seed 55978653
+[12/26 15:49:12] detectron2.engine.defaults INFO: Model:
+OneStageDetector(
+  (backbone): FPN(
+    (fpn_lateral2): Conv2d(96, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral3): Conv2d(192, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral4): Conv2d(384, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral5): Conv2d(768, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output5): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (top_block): LastLevelMaxPool()
+    (bottom_up): ConvNeXt(
+      (downsample_layers): ModuleList(
+        (0): Sequential(
+          (0): Conv2d(3, 96, kernel_size=(4, 4), stride=(4, 4))
+          (1): LayerNorm()
+        )
+        (1): Sequential(
+          (0): LayerNorm()
+          (1): Conv2d(96, 192, kernel_size=(2, 2), stride=(2, 2))
+        )
+        (2): Sequential(
+          (0): LayerNorm()
+          (1): Conv2d(192, 384, kernel_size=(2, 2), stride=(2, 2))
+        )
+        (3): Sequential(
+          (0): LayerNorm()
+          (1): Conv2d(384, 768, kernel_size=(2, 2), stride=(2, 2))
+        )
+      )
+      (stages): ModuleList(
+        (0): Sequential(
+          (0): Block(
+            (dwconv): Conv2d(96, 96, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=96)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=96, out_features=384, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=384, out_features=96, bias=True)
+            (drop_path): Identity()
+          )
+          (1): Block(
+            (dwconv): Conv2d(96, 96, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=96)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=96, out_features=384, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=384, out_features=96, bias=True)
+            (drop_path): DropPath(drop_prob=0.012)
+          )
+          (2): Block(
+            (dwconv): Conv2d(96, 96, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=96)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=96, out_features=384, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=384, out_features=96, bias=True)
+            (drop_path): DropPath(drop_prob=0.024)
+          )
+        )
+        (1): Sequential(
+          (0): Block(
+            (dwconv): Conv2d(192, 192, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=192)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=192, out_features=768, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=768, out_features=192, bias=True)
+            (drop_path): DropPath(drop_prob=0.035)
+          )
+          (1): Block(
+            (dwconv): Conv2d(192, 192, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=192)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=192, out_features=768, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=768, out_features=192, bias=True)
+            (drop_path): DropPath(drop_prob=0.047)
+          )
+          (2): Block(
+            (dwconv): Conv2d(192, 192, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=192)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=192, out_features=768, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=768, out_features=192, bias=True)
+            (drop_path): DropPath(drop_prob=0.059)
+          )
+        )
+        (2): Sequential(
+          (0): Block(
+            (dwconv): Conv2d(384, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=384)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=384, out_features=1536, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=1536, out_features=384, bias=True)
+            (drop_path): DropPath(drop_prob=0.071)
+          )
+          (1): Block(
+            (dwconv): Conv2d(384, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=384)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=384, out_features=1536, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=1536, out_features=384, bias=True)
+            (drop_path): DropPath(drop_prob=0.082)
+          )
+          (2): Block(
+            (dwconv): Conv2d(384, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=384)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=384, out_features=1536, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=1536, out_features=384, bias=True)
+            (drop_path): DropPath(drop_prob=0.094)
+          )
+          (3): Block(
+            (dwconv): Conv2d(384, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=384)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=384, out_features=1536, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=1536, out_features=384, bias=True)
+            (drop_path): DropPath(drop_prob=0.106)
+          )
+          (4): Block(
+            (dwconv): Conv2d(384, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=384)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=384, out_features=1536, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=1536, out_features=384, bias=True)
+            (drop_path): DropPath(drop_prob=0.118)
+          )
+          (5): Block(
+            (dwconv): Conv2d(384, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=384)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=384, out_features=1536, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=1536, out_features=384, bias=True)
+            (drop_path): DropPath(drop_prob=0.129)
+          )
+          (6): Block(
+            (dwconv): Conv2d(384, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=384)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=384, out_features=1536, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=1536, out_features=384, bias=True)
+            (drop_path): DropPath(drop_prob=0.141)
+          )
+          (7): Block(
+            (dwconv): Conv2d(384, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=384)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=384, out_features=1536, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=1536, out_features=384, bias=True)
+            (drop_path): DropPath(drop_prob=0.153)
+          )
+          (8): Block(
+            (dwconv): Conv2d(384, 384, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=384)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=384, out_features=1536, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=1536, out_features=384, bias=True)
+            (drop_path): DropPath(drop_prob=0.165)
+          )
+        )
+        (3): Sequential(
+          (0): Block(
+            (dwconv): Conv2d(768, 768, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=768)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=768, out_features=3072, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=3072, out_features=768, bias=True)
+            (drop_path): DropPath(drop_prob=0.176)
+          )
+          (1): Block(
+            (dwconv): Conv2d(768, 768, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=768)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=768, out_features=3072, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=3072, out_features=768, bias=True)
+            (drop_path): DropPath(drop_prob=0.188)
+          )
+          (2): Block(
+            (dwconv): Conv2d(768, 768, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=768)
+            (norm): LayerNorm()
+            (pwconv1): Linear(in_features=768, out_features=3072, bias=True)
+            (act): GELU(approximate='none')
+            (pwconv2): Linear(in_features=3072, out_features=768, bias=True)
+            (drop_path): DropPath(drop_prob=0.200)
+          )
+        )
+      )
+      (norm0): LayerNorm()
+      (norm1): LayerNorm()
+      (norm2): LayerNorm()
+      (norm3): LayerNorm()
+    )
+  )
+  (proposal_generator): FCOS(
+    (fcos_head): FCOSHead(
+      (cls_tower): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (2): ReLU()
+        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (4): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (5): ReLU()
+        (6): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (7): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (8): ReLU()
+        (9): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (10): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (11): ReLU()
+      )
+      (bbox_tower): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (2): ReLU()
+        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (4): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (5): ReLU()
+        (6): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (7): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (8): ReLU()
+        (9): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (10): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (11): ReLU()
+      )
+      (share_tower): Sequential()
+      (cls_logits): Conv2d(256, 80, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bbox_pred): Conv2d(256, 4, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (ctrness): Conv2d(256, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (scales): ModuleList(
+        (0-4): 5 x Scale()
+      )
+    )
+    (fcos_outputs): FCOSOutputs(
+      (loc_loss_func): IOULoss()
+    )
+  )
+)
+[12/26 15:49:33] detectron2.data.datasets.coco INFO: Loading /home/dataset/coco/annotations/instances_train2017.json takes 20.95 seconds.
+[12/26 15:49:34] detectron2.data.datasets.coco INFO: Loaded 118287 images in COCO format from /home/dataset/coco/annotations/instances_train2017.json
+[12/26 15:49:41] detectron2.data.build INFO: Removed 1021 images with no usable annotations. 117266 images left.
+[12/26 15:49:44] detectron2.data.build INFO: Distribution of instances among all 80 categories:
+[36m|   category    | #instances   |   category   | #instances   |   category    | #instances   |
+|:-------------:|:-------------|:------------:|:-------------|:-------------:|:-------------|
+|    person     | 257253       |   bicycle    | 7056         |      car      | 43533        |
+|  motorcycle   | 8654         |   airplane   | 5129         |      bus      | 6061         |
+|     train     | 4570         |    truck     | 9970         |     boat      | 10576        |
+| traffic light | 12842        | fire hydrant | 1865         |   stop sign   | 1983         |
+| parking meter | 1283         |    bench     | 9820         |     bird      | 10542        |
+|      cat      | 4766         |     dog      | 5500         |     horse     | 6567         |
+|     sheep     | 9223         |     cow      | 8014         |   elephant    | 5484         |
+|     bear      | 1294         |    zebra     | 5269         |    giraffe    | 5128         |
+|   backpack    | 8714         |   umbrella   | 11265        |    handbag    | 12342        |
+|      tie      | 6448         |   suitcase   | 6112         |    frisbee    | 2681         |
+|     skis      | 6623         |  snowboard   | 2681         |  sports ball  | 6299         |
+|     kite      | 8802         | baseball bat | 3273         | baseball gl.. | 3747         |
+|  skateboard   | 5536         |  surfboard   | 6095         | tennis racket | 4807         |
+|    bottle     | 24070        |  wine glass  | 7839         |      cup      | 20574        |
+|     fork      | 5474         |    knife     | 7760         |     spoon     | 6159         |
+|     bowl      | 14323        |    banana    | 9195         |     apple     | 5776         |
+|   sandwich    | 4356         |    orange    | 6302         |   broccoli    | 7261         |
+|    carrot     | 7758         |   hot dog    | 2884         |     pizza     | 5807         |
+|     donut     | 7005         |     cake     | 6296         |     chair     | 38073        |
+|     couch     | 5779         | potted plant | 8631         |      bed      | 4192         |
+| dining table  | 15695        |    toilet    | 4149         |      tv       | 5803         |
+|    laptop     | 4960         |    mouse     | 2261         |    remote     | 5700         |
+|   keyboard    | 2854         |  cell phone  | 6422         |   microwave   | 1672         |
+|     oven      | 3334         |   toaster    | 225          |     sink      | 5609         |
+| refrigerator  | 2634         |     book     | 24077        |     clock     | 6320         |
+|     vase      | 6577         |   scissors   | 1464         |  teddy bear   | 4729         |
+|  hair drier   | 198          |  toothbrush  | 1945         |               |              |
+|     total     | 849949       |              |              |               |              |[0m
+[12/26 15:49:44] detectron2.data.dataset_mapper INFO: [DatasetMapper] Augmentations used in training: [ResizeShortestEdge(short_edge_length=(640, 672, 704, 736, 768, 800), max_size=1333, sample_style='choice'), RandomFlip()]
+[12/26 15:49:44] detectron2.data.build INFO: Using training sampler TrainingSampler
+[12/26 15:49:44] detectron2.data.common INFO: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[12/26 15:49:44] detectron2.data.common INFO: Serializing 117266 elements to byte tensors and concatenating them all ...
+[12/26 15:49:48] detectron2.data.common INFO: Serialized dataset takes 451.77 MiB
+[12/26 15:49:48] detectron2.data.build INFO: Making batched data loader with batch_size=4
+[12/26 15:49:59] detectron2.checkpoint.detection_checkpoint INFO: [DetectionCheckpointer] Loading from /home/god01/detection/DiffusionDet/models/convnext_tiny_1k_224_ema.pkl ...
+[12/26 15:49:59] fvcore.common.checkpoint INFO: [Checkpointer] Loading from /home/god01/detection/DiffusionDet/models/convnext_tiny_1k_224_ema.pkl ...
+[12/26 15:50:00] fvcore.common.checkpoint INFO: Reading a file from 'third_party'
+[12/26 15:50:00] detectron2.checkpoint.c2_model_loading INFO: Following weights matched with submodule backbone.bottom_up - Total num: 26
+[12/26 15:50:00] fvcore.common.checkpoint WARNING: Some model parameters or buffers are not found in the checkpoint:
+[34mbackbone.bottom_up.norm0.{bias, weight}[0m
+[34mbackbone.bottom_up.norm1.{bias, weight}[0m
+[34mbackbone.bottom_up.norm2.{bias, weight}[0m
+[34mbackbone.bottom_up.norm3.{bias, weight}[0m
+[34mbackbone.fpn_lateral2.{bias, weight}[0m
+[34mbackbone.fpn_lateral3.{bias, weight}[0m
+[34mbackbone.fpn_lateral4.{bias, weight}[0m
+[34mbackbone.fpn_lateral5.{bias, weight}[0m
+[34mbackbone.fpn_output2.{bias, weight}[0m
+[34mbackbone.fpn_output3.{bias, weight}[0m
+[34mbackbone.fpn_output4.{bias, weight}[0m
+[34mbackbone.fpn_output5.{bias, weight}[0m
+[34mproposal_generator.fcos_head.bbox_pred.{bias, weight}[0m
+[34mproposal_generator.fcos_head.bbox_tower.0.{bias, weight}[0m
+[34mproposal_generator.fcos_head.bbox_tower.1.{bias, weight}[0m
+[34mproposal_generator.fcos_head.bbox_tower.10.{bias, weight}[0m
+[34mproposal_generator.fcos_head.bbox_tower.3.{bias, weight}[0m
+[34mproposal_generator.fcos_head.bbox_tower.4.{bias, weight}[0m
+[34mproposal_generator.fcos_head.bbox_tower.6.{bias, weight}[0m
+[34mproposal_generator.fcos_head.bbox_tower.7.{bias, weight}[0m
+[34mproposal_generator.fcos_head.bbox_tower.9.{bias, weight}[0m
+[34mproposal_generator.fcos_head.cls_logits.{bias, weight}[0m
+[34mproposal_generator.fcos_head.cls_tower.0.{bias, weight}[0m
+[34mproposal_generator.fcos_head.cls_tower.1.{bias, weight}[0m
+[34mproposal_generator.fcos_head.cls_tower.10.{bias, weight}[0m
+[34mproposal_generator.fcos_head.cls_tower.3.{bias, weight}[0m
+[34mproposal_generator.fcos_head.cls_tower.4.{bias, weight}[0m
+[34mproposal_generator.fcos_head.cls_tower.6.{bias, weight}[0m
+[34mproposal_generator.fcos_head.cls_tower.7.{bias, weight}[0m
+[34mproposal_generator.fcos_head.cls_tower.9.{bias, weight}[0m
+[34mproposal_generator.fcos_head.ctrness.{bias, weight}[0m
+[34mproposal_generator.fcos_head.scales.0.scale[0m
+[34mproposal_generator.fcos_head.scales.1.scale[0m
+[34mproposal_generator.fcos_head.scales.2.scale[0m
+[34mproposal_generator.fcos_head.scales.3.scale[0m
+[34mproposal_generator.fcos_head.scales.4.scale[0m
+[12/26 15:50:00] fvcore.common.checkpoint WARNING: The checkpoint state_dict contains keys that are not used by the model:
+  [35mhead.{bias, weight}[0m
+  [35mnorm.{bias, weight}[0m
+[12/26 15:50:00] detectron2.engine.train_loop INFO: Starting training from iteration 0
+[12/26 15:51:57] detectron2.engine.hooks INFO: Overall training speed: 48 iterations in 0:01:26 (1.7955 s / it)
+[12/26 15:51:57] detectron2.engine.hooks INFO: Total training time: 0:01:26 (0:00:00 on hooks)
