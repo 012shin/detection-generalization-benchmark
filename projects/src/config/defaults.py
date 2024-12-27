@@ -24,7 +24,8 @@ _C.MODEL.CONVNEXT.OUT_FEATURES= [0, 1, 2, 3]
 # solver
 _C.SOLVER.WEIGHT_DECAY_RATE= 0.95
 _C.SOLVER.CLIP_GRADIENTS.CLIP_TYPE="model"
-
+_C.SOLVER.OPTIMIZER = "SGD"
+_C.SOLVER.BACKBONE_MULTIPLIER = 1.0
 
 # VIT
 
@@ -85,14 +86,10 @@ _C.MODEL.SparseRCNN.NHEADS = 8
 _C.MODEL.SparseRCNN.DROPOUT = 0.0
 _C.MODEL.SparseRCNN.DIM_FEEDFORWARD = 2048
 _C.MODEL.SparseRCNN.ACTIVATION = 'relu'
-_C.MODEL.SparseRCNN.HIDDEN_DIM = 256
 _C.MODEL.SparseRCNN.NUM_CLS = 1
 _C.MODEL.SparseRCNN.NUM_REG = 3
 _C.MODEL.SparseRCNN.NUM_HEADS = 6
-
-# Dynamic Conv.
-_C.MODEL.SparseRCNN.NUM_DYNAMIC = 2
-_C.MODEL.SparseRCNN.DIM_DYNAMIC = 64
+_C.MODEL.SparseRCNN.HIDDEN_DIM = 256
 
 # Loss.
 _C.MODEL.SparseRCNN.CLASS_WEIGHT = 2.0
@@ -107,10 +104,6 @@ _C.MODEL.SparseRCNN.ALPHA = 0.25
 _C.MODEL.SparseRCNN.GAMMA = 2.0
 _C.MODEL.SparseRCNN.PRIOR_PROB = 0.01
 
-# config파일에서 수정해야함
-# Optimizer. 
-_C.SOLVER.OPTIMIZER = "SGD"
-_C.SOLVER.BACKBONE_MULTIPLIER = 1.0
 
 # DiffusionDet
 """
@@ -125,14 +118,10 @@ _C.MODEL.DiffusionDet.NHEADS = 8
 _C.MODEL.DiffusionDet.DROPOUT = 0.0
 _C.MODEL.DiffusionDet.DIM_FEEDFORWARD = 2048
 _C.MODEL.DiffusionDet.ACTIVATION = 'relu'
-_C.MODEL.DiffusionDet.HIDDEN_DIM = 256
 _C.MODEL.DiffusionDet.NUM_CLS = 1
 _C.MODEL.DiffusionDet.NUM_REG = 3
 _C.MODEL.DiffusionDet.NUM_HEADS = 6
-
-# Dynamic Conv.
-_C.MODEL.DiffusionDet.NUM_DYNAMIC = 2
-_C.MODEL.DiffusionDet.DIM_DYNAMIC = 64
+_C.MODEL.DiffusionDet.HIDDEN_DIM = 256
 
 # Loss.
 _C.MODEL.DiffusionDet.CLASS_WEIGHT = 2.0
@@ -158,10 +147,14 @@ _C.MODEL.DiffusionDet.SAMPLE_STEP = 1
 # Inference
 _C.MODEL.DiffusionDet.USE_NMS = True
 
-
+# Dynamic Conv.
+_C.MODEL.DynamicConv = CN()
+_C.MODEL.DynamicConv.NUM_DYNAMIC = 2
+_C.MODEL.DynamicConv.DIM_DYNAMIC = 64
+_C.MODEL.DynamicConv.HIDDEN_DIM = 256
 
 # ---------------------------------------------------------------------------- #
 # Test
 # ---------------------------------------------------------------------------- #
  # TEST on corruptions
-_C.TEST.NOISE_ALL = False 
+_C.TEST.NOISE_ALL = False

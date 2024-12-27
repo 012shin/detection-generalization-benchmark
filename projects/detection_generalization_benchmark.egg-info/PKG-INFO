@@ -1,0 +1,21 @@
+Metadata-Version: 2.1
+Name: detection-generalization-benchmark
+Version: 0.6
+Home-page: https://github.com/012shin/detection-generalization-benchmark.git
+Author: Korea_UTL
+Requires-Python: >=3.6
+Requires-Dist: termcolor>=1.1
+Requires-Dist: Pillow>=6.0
+Requires-Dist: yacs>=0.1.6
+Requires-Dist: tabulate
+Requires-Dist: cloudpickle
+Requires-Dist: matplotlib
+Requires-Dist: tqdm>4.29.0
+Requires-Dist: tensorboard
+Requires-Dist: rapidfuzz
+Requires-Dist: Polygon3
+Requires-Dist: shapely
+Requires-Dist: scikit-image
+Requires-Dist: editdistance
+Provides-Extra: all
+Requires-Dist: psutil; extra == "all"
