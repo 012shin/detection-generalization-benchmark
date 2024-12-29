@@ -1,15 +1,18 @@
-# training_dir 제외
+# ───────────────────── Project Directories ─────────────────────
+# Ignore specific project directories
 projects/training_dir/
 projects/output/
-# __pycache__ 폴더를 모든 경로에서 무시
+projects/models/
+projects/build/
+
+# Ignore metadata files
+projects/detection_generalization_benchmark.egg-info/
+
+# ───────────────────── Python Specific ─────────────────────
+# Ignore compiled Python files and caches
 **/__pycache__/
 *.pyc
 
-
-projects/build/
-
-# Ignore large binary files
+# ───────────────────── Binary Files ─────────────────────
+# Ignore shared object files (e.g., compiled extensions)
 *.so
-*.pyc
-
-projects/detection_generalization_benchmark.egg-info/
