@@ -11,3 +11,5 @@ projects/build/
 # Ignore large binary files
 *.so
 *.pyc
+
+projects/detection_generalization_benchmark.egg-info/

@@ -1,6 +1,6 @@
 MODEL:
   META_ARCHITECTURE: "OneStageDetector"
-  WEIGHTS: "/home/god01/detection/DiffusionDet/models/convnext_tiny_1k_224_ema.pkl"
+  WEIGHTS: "/home/god01/detection/models/convnext_tiny_1k_224_ema.pkl"
   BACKBONE:
     NAME: "build_convnext_fpn_backbone"
   CONVNEXT:
@@ -25,8 +25,9 @@ SOLVER:
   BASE_LR: 0.0001  # Note that RetinaNet uses a different default learning rate
   STEPS: (210000, 250000)
   MAX_ITER: 270000
-  OPTIMIZER: "ADAW"
+  OPTIMIZER: "ADAMW"
 INPUT:
   MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
 TEST: 
   EVAL_PERIOD: 5000
+OUTPUT_DIR: "training_dir/fcos_convnext_t_3x"
