@@ -93,7 +93,7 @@ def do_test(cfg, model):
         range_sev = [1, 2, 3, 4, 5]
         for corrupt in corruptions:
             for sev in range_sev:
-                data_mapper = DatasetMapper(cfg, is_train=False, eval_aug=corrupt, severity=sev)
+                data_mapper = CorruptionMapper(cfg, is_train=False, eval_aug=corrupt, severity=sev)
                 for dataset_name in cfg.DATASETS.TEST:
                     data_loader = build_detection_test_loader(cfg, dataset_name, mapper=data_mapper)
                     evaluator = get_evaluator(
@@ -168,7 +168,7 @@ def do_test(cfg, model):
 #                     continue
 
 #                 # Build data loader and evaluator
-#                 data_mapper = DatasetMapper(cfg, is_train=False, eval_aug=corrupt, severity=sev)
+#                 data_mapper = CorruptionMapper(cfg, is_train=False, eval_aug=corrupt, severity=sev)
 #                 data_loader = build_detection_test_loader(cfg, dataset_name, mapper=data_mapper)
 #                 evaluator = get_evaluator(
 #                     cfg, dataset_name, os.path.join(cfg.OUTPUT_DIR, "inference", dataset_name)
