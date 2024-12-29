@@ -91,6 +91,10 @@ _C.MODEL.SparseRCNN.NUM_REG = 3
 _C.MODEL.SparseRCNN.NUM_HEADS = 6
 _C.MODEL.SparseRCNN.HIDDEN_DIM = 256
 
+# Dynamic Conv.
+_C.MODEL.SparseRCNN.NUM_DYNAMIC = 2
+_C.MODEL.SparseRCNN.DIM_DYNAMIC = 64
+
 # Loss.
 _C.MODEL.SparseRCNN.CLASS_WEIGHT = 2.0
 _C.MODEL.SparseRCNN.GIOU_WEIGHT = 2.0
@@ -123,6 +127,10 @@ _C.MODEL.DiffusionDet.NUM_REG = 3
 _C.MODEL.DiffusionDet.NUM_HEADS = 6
 _C.MODEL.DiffusionDet.HIDDEN_DIM = 256
 
+# Dynamic Conv.
+_C.MODEL.DiffusionDet.NUM_DYNAMIC = 2
+_C.MODEL.DiffusionDet.DIM_DYNAMIC = 64
+
 # Loss.
 _C.MODEL.DiffusionDet.CLASS_WEIGHT = 2.0
 _C.MODEL.DiffusionDet.GIOU_WEIGHT = 2.0
@@ -152,6 +160,28 @@ _C.MODEL.DynamicConv = CN()
 _C.MODEL.DynamicConv.NUM_DYNAMIC = 2
 _C.MODEL.DynamicConv.DIM_DYNAMIC = 64
 _C.MODEL.DynamicConv.HIDDEN_DIM = 256
+
+# TTA.
+_C.TEST.AUG.MIN_SIZES = (400, 500, 600, 640, 700, 900, 1000, 1100, 1200, 1300, 1400, 1800, 800)
+_C.TEST.AUG.CVPODS_TTA = True
+_C.TEST.AUG.SCALE_FILTER = True
+_C.TEST.AUG.SCALE_RANGES = ([96, 10000], [96, 10000], 
+                                [64, 10000], [64, 10000],
+                                [64, 10000], [0, 10000],
+                                [0, 10000], [0, 256],
+                                [0, 256], [0, 192],
+                                [0, 192], [0, 96],
+                                [0, 10000])
+# Model EMA
+_C.MODEL_EMA = type(_C)()
+_C.MODEL_EMA.ENABLED = False
+_C.MODEL_EMA.DECAY = 0.999
+# use the same as MODEL.DEVICE when empty
+_C.MODEL_EMA.DEVICE = ""
+# When True, loading the ema weight to the model when eval_only=True in build_model()
+_C.MODEL_EMA.USE_EMA_WEIGHTS_FOR_EVAL_ONLY = False
+# when True, use YOLOX EMA: https://github.com/Megvii-BaseDetection/YOLOX/blob/main/yolox/utils/ema.py#L22
+_C.MODEL_EMA.YOLOX = False
 
 # ---------------------------------------------------------------------------- #
 # Test
