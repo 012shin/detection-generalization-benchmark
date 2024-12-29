@@ -1,0 +1,13 @@
+# training_dir 제외
+projects/training_dir/
+projects/output/
+# __pycache__ 폴더를 모든 경로에서 무시
+**/__pycache__/
+*.pyc
+
+
+projects/build/
+
+# Ignore large binary files
+*.so
+*.pyc
