@@ -37,13 +37,13 @@ from detectron2.evaluation import (
     SemSegEvaluator,
     verify_results,
 )
-from detectron2.modeling import GeneralizedRCNNWithTTA
+from detectron2.modeling import GeneralizedRCNNWithTTA,build_model
 
 # from src.data import SparseRCNNDatasetMapper
 from src.config import get_cfg
 from src.data.dataset_mapper import SparseRCNNDatasetMapper,CorruptionMapper
 
-from .eval_utils import do_test
+from eval_utils import do_test
 
 from typing import Any, Dict, List, Set
 from detectron2.solver.build import maybe_add_gradient_clipping
@@ -240,20 +240,15 @@ def main(args):
 
     if args.eval_only:
         model = Trainer.build_model(cfg)
-        kwargs = may_get_ema_checkpointer(cfg, model)
-        if cfg.MODEL_EMA.ENABLED:
-            EMADetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR, **kwargs).resume_or_load(cfg.MODEL.WEIGHTS,
-                                                                                              resume=args.resume)
-        else:
-            DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR, **kwargs).resume_or_load(cfg.MODEL.WEIGHTS,
-                                                                                           resume=args.resume)
-        # res = Trainer.ema_test(cfg, model)
-        # if cfg.TEST.AUG.ENABLED:
-        #     res.update(Trainer.test_with_TTA(cfg, model))
-        # if comm.is_main_process():
-        #     verify_results(cfg, res)
-        # return res
-        return do_test(cfg,model)
+        DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
+            cfg.MODEL.WEIGHTS, resume=args.resume
+        )
+        res = Trainer.test(cfg, model)
+        if cfg.TEST.AUG.ENABLED:
+            res.update(Trainer.test_with_TTA(cfg, model))
+        if comm.is_main_process():
+            verify_results(cfg, res)
+        return res
     trainer = Trainer(cfg)
     trainer.resume_or_load(resume=args.resume)
     return trainer.train()
