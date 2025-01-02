@@ -43,7 +43,7 @@ from detectron2.modeling import GeneralizedRCNNWithTTA,build_model
 from src.config import get_cfg
 from src.data.dataset_mapper import SparseRCNNDatasetMapper,CorruptionMapper
 
-from eval_utils import do_test
+from eval_utils import apply_corruption_test
 
 from typing import Any, Dict, List, Set
 from detectron2.solver.build import maybe_add_gradient_clipping
@@ -239,16 +239,10 @@ def main(args):
     cfg = setup(args)
 
     if args.eval_only:
-        model = Trainer.build_model(cfg)
         DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
             cfg.MODEL.WEIGHTS, resume=args.resume
         )
-        res = Trainer.test(cfg, model)
-        if cfg.TEST.AUG.ENABLED:
-            res.update(Trainer.test_with_TTA(cfg, model))
-        if comm.is_main_process():
-            verify_results(cfg, res)
-        return res
+        return apply_corruption_test(cfg, model)
     trainer = Trainer(cfg)
     trainer.resume_or_load(resume=args.resume)
     return trainer.train()

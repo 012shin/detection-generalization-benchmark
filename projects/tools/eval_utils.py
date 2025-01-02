@@ -73,7 +73,7 @@ def get_evaluator(cfg, dataset_name, output_folder=None):
     return DatasetEvaluators(evaluator_list)
 
 
-def do_test(cfg, model):
+def apply_corruption_test(cfg, model):
     results = OrderedDict()
     logger = logging.getLogger("gdet_training")
     results_file = "./inference/" + '_'.join(cfg.OUTPUT_DIR.split('/')[1:]) + ".csv"
