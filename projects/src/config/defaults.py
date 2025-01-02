@@ -14,7 +14,7 @@ _C.MODEL.SWIN.USE_CHECKPOINT = False
 _C.MODEL.SWIN.OUT_FEATURES = (0, 1, 2, 3)  # modify
 
 # Convnext config
-_C.MODEL.CONVNEXT =CN()
+_C.MODEL.CONVNEXT = CN()
 _C.MODEL.CONVNEXT.DEPTHS= [3, 3, 9, 3]
 _C.MODEL.CONVNEXT.DIMS= [96, 192, 384, 768]
 _C.MODEL.CONVNEXT.DROP_PATH_RATE= 0.2
@@ -28,6 +28,13 @@ _C.SOLVER.OPTIMIZER = "SGD"
 _C.SOLVER.BACKBONE_MULTIPLIER = 1.0
 
 # VIT
+_C.MODEL.VIT = CN()
+_C.MODEL.VIT.PATCH_SIZE = 16
+_C.MODEL.VIT.EMBED_DIM = 768
+_C.MODEL.VIT.DEPTH = 12
+_C.MODEL.VIT.DROP_PATH_RATE =0.1
+_C.MODEL.VIT.IN_FEATURES = ["vit"]
+
 
 
 
@@ -187,4 +194,4 @@ _C.MODEL_EMA.YOLOX = False
 # Test
 # ---------------------------------------------------------------------------- #
  # TEST on corruptions
-_C.TEST.NOISE_ALL = False
+_C.TEST.NOISE_ALL = True

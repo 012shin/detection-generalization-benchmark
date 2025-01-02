@@ -18,6 +18,7 @@ from detectron2.data import DatasetCatalog, MetadataCatalog, DatasetMapper, MapD
 from detectron2.data.common import AspectRatioGroupedDataset, DatasetFromList
 from detectron2.data.detection_utils import check_metadata_consistency
 from detectron2.data.samplers import InferenceSampler, RepeatFactorTrainingSampler, TrainingSampler
+from detectron2.data.build import get_detection_dataset_dicts,trivial_batch_collator
 
 """
 This file contains the default logic to build a dataloader for training or testing.

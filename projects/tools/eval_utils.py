@@ -85,7 +85,7 @@ def apply_corruption_test(cfg, model):
         writer = csv.writer(csv_file)
         writer.writerow(["Dataset", "Noise Type", "Severity", "Metric", "Value"])
 
-    if cfg.NOISE_ALL:
+    if cfg.TEST.NOISE_ALL:
         corruptions = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
                        "glass_blur", "zoom_blur", "motion_blur", "frost", "fog",
                        "brightness", "contrast", "elastic_transform", "pixelate",
