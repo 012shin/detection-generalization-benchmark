@@ -4,6 +4,7 @@ projects/training_dir/
 projects/output/
 projects/models/
 projects/build/
+projects/inference/
 
 # Ignore metadata files
 projects/detection_generalization_benchmark.egg-info/
