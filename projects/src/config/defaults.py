@@ -194,4 +194,4 @@ _C.MODEL_EMA.YOLOX = False
 # Test
 # ---------------------------------------------------------------------------- #
  # TEST on corruptions
-_C.TEST.NOISE_ALL = True
+_C.TEST.NOISE_ALL = False

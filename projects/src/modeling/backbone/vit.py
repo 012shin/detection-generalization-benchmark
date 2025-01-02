@@ -522,3 +522,15 @@ def get_vit_lr_decay_rate(name, lr_decay_rate=1.0, num_layers=12):
             layer_id = int(name[name.find(".blocks.") :].split(".")[2]) + 1
 
     return lr_decay_rate ** (num_layers + 1 - layer_id)
+
+
+@BACKBONE_REGISTRY.register()
+def build_visiontransformer_backbone(cfg, input_shape):
+    """
+    """
+    model = ViT(
+       
+    )
+    # print('Initializing', config['pretrained'])
+    model.init_weights(config['pretrained'])
+    return model

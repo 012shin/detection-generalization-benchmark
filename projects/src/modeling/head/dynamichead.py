@@ -498,7 +498,7 @@ class Diffution_RCNNHead(nn.Module):
         fc_feature = obj_features.transpose(0, 1).reshape(N * nr_boxes, -1)
 
         scale_shift = self.block_time_mlp(time_emb)
-        scale_shift = torch.repeat_interleave(scale_shift, nr_boxes.to(device="cuda"), dim=0)
+        scale_shift = torch.repeat_interleave(scale_shift, nr_boxes.to(device="cuda"), dim=0)   
         scale, shift = scale_shift.chunk(2, dim=1)
         fc_feature = fc_feature * (scale + 1) + shift
 
