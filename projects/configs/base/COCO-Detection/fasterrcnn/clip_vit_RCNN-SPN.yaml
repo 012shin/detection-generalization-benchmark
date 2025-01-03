@@ -1,0 +1,20 @@
+_BASE_: "Base-RCNN-FPN.yaml"
+MODEL:
+  WEIGHTS: "/home/god01/detection/detection-generalization-benchmark/projects/models/vit_base_patch16_clip_224_openai.pkl"
+  MASK_ON: False
+  BACKBONE:
+    NAME: build_vit_sfp_backbone
+  VIT:
+    INPUT_SIZE: 1024
+    PATCH_SIZE: 16
+    DEPTH: 12 
+    NUM_HEADS: 12
+    EMBED_DIM: 768
+    DROP_PATH_RATE: 0.1
+    OUT_FEATURE: "last_feat"
+SOLVER:
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000 # 수정
+  OPTIMIZER: "ADAMW"
+  BASE_LR: 0.0001
+  IMS_PER_BATCH: 16 # 수정

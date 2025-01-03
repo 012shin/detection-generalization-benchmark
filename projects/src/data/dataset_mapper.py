@@ -17,7 +17,7 @@ from detectron2.data.transforms import TransformGen
 
 from .corruption.augmix_aug import augmentations
 from .corruption.augmix_aug import apply_op
-from .corruption.augmix_aug import augmentation_map  # 매핑 테이블 import
+from .corruption.augmix_aug import augmentation_map  
 
 
 

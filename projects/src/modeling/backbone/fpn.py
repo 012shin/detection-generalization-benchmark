@@ -1,4 +1,5 @@
 from torch import nn
+from functools import partial
 import torch.nn.functional as F
 import fvcore.nn.weight_init as weight_init
 
@@ -7,8 +8,9 @@ from detectron2.layers import ShapeSpec
 from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
 from .swintransformer import build_swintransformer_backbone
 from .convnext import build_convnext_backbone
+from .vit import build_visiontransformer_backbone,SimpleFeaturePyramid
 
-__all__ = ["build_fcos_resnet_fpn_backbone", "build_swintransformer_fpn_backbone, build_convnext_fpn_backbone"]
+__all__ = ["build_fcos_resnet_fpn_backbone", "build_swintransformer_fpn_backbone, build_convnext_fpn_backbone,build_vit_fpn_backbone"]
 
 class LastLevelMaxPool(nn.Module):
     """
@@ -130,3 +132,37 @@ def build_convnext_fpn_backbone(cfg, input_shape: ShapeSpec):
         fuse_type=cfg.MODEL.FPN.FUSE_TYPE,
     )
     return backbone
+
+@BACKBONE_REGISTRY.register()
+def build_vit_fpn_backbone(cfg, input_shape: ShapeSpec):
+    """
+    Args:
+        cfg: a detectron2 CfgNode
+    Returns:
+        backbone (Backbone): backbone module, must be a subclass of :class:`Backbone`.
+    """
+    bottom_up = build_visiontransformer_backbone(cfg, input_shape)
+    in_features = cfg.MODEL.FPN.IN_FEATURES
+    out_channels = cfg.MODEL.FPN.OUT_CHANNELS
+    backbone = FPN(
+        bottom_up=bottom_up,
+        in_features=in_features,
+        out_channels=out_channels,
+        norm=cfg.MODEL.FPN.NORM,
+        top_block=LastLevelMaxPool(),
+        fuse_type=cfg.MODEL.FPN.FUSE_TYPE,
+    )
+    return backbone
+
+
+@BACKBONE_REGISTRY.register()
+def build_vit_sfp_backbone(cfg, input_shape: ShapeSpec):
+    return SimpleFeaturePyramid(
+        net=build_visiontransformer_backbone(cfg, input_shape),
+        in_feature=cfg.MODEL.VIT.OUT_FEATURE,
+        scale_factors=cfg.MODEL.VIT.SCALE_FACTORS,
+        out_channels=cfg.MODEL.FPN.OUT_CHANNELS,
+        top_block=LastLevelMaxPool(),
+        norm="LN",
+        square_pad=1024
+    )

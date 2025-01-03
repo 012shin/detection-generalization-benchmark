@@ -140,57 +140,60 @@ def apply_corruption_test(cfg, model):
         return results
 
 
-# def do_test_resume(cfg, model, results_file="./inference/output.csv"):
-#     # Load completed tasks
-#     completed_tasks = set()
-#     if os.path.exists(results_file):
-#         with open(results_file, "r") as csv_file:
-#             reader = csv.reader(csv_file)
-#             next(reader)  # Skip header
-#             for row in reader:
-#                 dataset, corruption, severity, _, _ = row
-#                 completed_tasks.add((dataset, corruption, severity))
+def apply_corruption_test_resume(cfg, model):
+    # Load completed tasks
+    base_dir = "inference"
+    filename = os.path.basename(cfg.OUTPUT_DIR)
+    results_file = os.path.join(base_dir, filename)
+    completed_tasks = set()
+    if os.path.exists(results_file):
+        with open(results_file, "r") as csv_file:
+            reader = csv.reader(csv_file)
+            next(reader)  # Skip header
+            for row in reader:
+                dataset, corruption, severity, _, _ = row
+                completed_tasks.add((dataset, corruption, severity))
 
-#     # Prepare for inference
-#     results = OrderedDict()
-#     logger = logging.getLogger("gdet_training")
-#     corruptions = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
-#                    "glass_blur", "zoom_blur", "motion_blur", "frost", "fog",
-#                    "brightness", "contrast", "elastic_transform", "pixelate",
-#                    "jpeg_compression"]
-#     range_sev = [1, 2, 3, 4, 5]
+    # Prepare for inference
+    results = OrderedDict()
+    logger = logging.getLogger("gdet_training")
+    corruptions = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
+                   "glass_blur", "zoom_blur", "motion_blur", "frost", "fog",
+                   "brightness", "contrast", "elastic_transform", "pixelate",
+                   "jpeg_compression"]
+    range_sev = [1, 2, 3, 4, 5]
 
-#     for corrupt in corruptions:
-#         for sev in range_sev:
-#             for dataset_name in cfg.DATASETS.TEST:
-#                 # Skip already completed tasks
-#                 if (dataset_name, corrupt, str(sev)) in completed_tasks:
-#                     continue
+    for corrupt in corruptions:
+        for sev in range_sev:
+            for dataset_name in cfg.DATASETS.TEST:
+                # Skip already completed tasks
+                if (dataset_name, corrupt, str(sev)) in completed_tasks:
+                    continue
 
-#                 # Build data loader and evaluator
-#                 data_mapper = CorruptionMapper(cfg, is_train=False, eval_aug=corrupt, severity=sev)
-#                 data_loader = build_detection_test_loader(cfg, dataset_name, mapper=data_mapper)
-#                 evaluator = get_evaluator(
-#                     cfg, dataset_name, os.path.join(cfg.OUTPUT_DIR, "inference", dataset_name)
-#                 )
+                # Build data loader and evaluator
+                data_mapper = CorruptionMapper(cfg, is_train=False, eval_aug=corrupt, severity=sev)
+                data_loader = build_detection_test_loader(cfg, dataset_name, mapper=data_mapper)
+                evaluator = get_evaluator(
+                    cfg, dataset_name, os.path.join(cfg.OUTPUT_DIR, "inference", dataset_name)
+                )
                 
-#                 # Perform inference
-#                 results_i = inference_on_dataset(model, data_loader, evaluator)
-#                 results[dataset_name + "{}_{}".format(corrupt, str(sev))] = results_i
+                # Perform inference
+                results_i = inference_on_dataset(model, data_loader, evaluator)
+                results[dataset_name + "{}_{}".format(corrupt, str(sev))] = results_i
                 
-#                 if is_main_process():
-#                     logger.info("Evaluation results for {} in csv format:".format(
-#                         dataset_name + "{}_{}".format(corrupt, str(sev))))
-#                     print_csv_format(results_i)
+                if comm.is_main_process():
+                    logger.info("Evaluation results for {} in csv format:".format(
+                        dataset_name + "{}_{}".format(corrupt, str(sev))))
+                    print_csv_format(results_i)
                 
-#                 # Save results to CSV
-#                 with open(results_file, "a", newline='') as csv_file:
-#                     writer = csv.writer(csv_file)
-#                     for task, res in results_i.items():
-#                         if isinstance(res, Mapping):
-#                             for k, v in res.items():
-#                                 if "-" not in k:  # Exclude metrics like "AP-category"
-#                                     writer.writerow([dataset_name, corrupt, sev, k, v])
-#                         else:
-#                             writer.writerow([dataset_name, corrupt, sev, task, res])
-#     return results
+                # Save results to CSV
+                with open(results_file, "a", newline='') as csv_file:
+                    writer = csv.writer(csv_file)
+                    for task, res in results_i.items():
+                        if isinstance(res, Mapping):
+                            for k, v in res.items():
+                                if "-" not in k:  # Exclude metrics like "AP-category"
+                                    writer.writerow([dataset_name, corrupt, sev, k, v])
+                        else:
+                            writer.writerow([dataset_name, corrupt, sev, task, res])
+    return results

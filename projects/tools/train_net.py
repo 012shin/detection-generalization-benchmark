@@ -22,7 +22,8 @@ from collections import OrderedDict
 import torch
 
 import detectron2.utils.comm as comm
-from detectron2.data import build_detection_train_loader
+from detectron2.data import build_detection_train_loader,DatasetMapper
+from detectron2.data import transforms as T
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.data import MetadataCatalog
 from detectron2.engine import DefaultTrainer, default_argument_parser, default_setup, hooks, launch
@@ -103,6 +104,13 @@ class Trainer(DefaultTrainer):
         if cfg.MODEL.META_ARCHITECTURE in ["SparseRCNN", "DiffusionDet"]:
             mapper = SparseRCNNDatasetMapper(cfg, is_train=True)
             return build_detection_train_loader(cfg, mapper=mapper) 
+        elif "vit" in cfg.MODEL.WEIGHTS:
+            mapper = DatasetMapper(cfg,is_train=True, augmentations=[
+                T.RandomFlip(horizontal=True),
+                T.ResizeScale( min_scale=0.1, max_scale=2.0, target_height=cfg.MODEL.VIT.INPUT_SIZE, target_width=cfg.MODEL.VIT.INPUT_SIZE),
+                T.FixedSizeCrop(crop_size=(cfg.MODEL.VIT.INPUT_SIZE, cfg.MODEL.VIT.INPUT_SIZE), pad=False)
+            ])
+            return build_detection_train_loader(cfg,mapper = mapper)
         else:
             return build_detection_train_loader(cfg)
 

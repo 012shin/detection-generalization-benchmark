@@ -43,7 +43,7 @@ from detectron2.modeling import GeneralizedRCNNWithTTA,build_model
 from src.config import get_cfg
 from src.data.dataset_mapper import SparseRCNNDatasetMapper,CorruptionMapper
 
-from eval_utils import apply_corruption_test
+from eval_utils import apply_corruption_test,apply_corruption_test_resume
 
 from typing import Any, Dict, List, Set
 from detectron2.solver.build import maybe_add_gradient_clipping
@@ -242,7 +242,7 @@ def main(args):
         DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
             cfg.MODEL.WEIGHTS, resume=args.resume
         )
-        return apply_corruption_test(cfg, model)
+        return apply_corruption_test_resume(cfg, model)
     trainer = Trainer(cfg)
     trainer.resume_or_load(resume=args.resume)
     return trainer.train()

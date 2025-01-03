@@ -4,10 +4,11 @@ import fvcore.nn.weight_init as weight_init
 import torch
 import torch.nn as nn
 
-from detectron2.layers import CNNBlockBase, Conv2d, get_norm
+from detectron2.layers import CNNBlockBase, Conv2d, get_norm,ShapeSpec
 from detectron2.modeling.backbone.fpn import _assert_strides_are_log2_contiguous
 
 from detectron2.modeling.backbone.backbone import Backbone
+from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
 from detectron2.modeling.backbone.utils import (
     PatchEmbed,
     add_decomposed_rel_pos,
@@ -15,6 +16,7 @@ from detectron2.modeling.backbone.utils import (
     window_partition,
     window_unpartition,
 )
+from functools import partial
 
 logger = logging.getLogger(__name__)
 
@@ -526,11 +528,29 @@ def get_vit_lr_decay_rate(name, lr_decay_rate=1.0, num_layers=12):
 
 @BACKBONE_REGISTRY.register()
 def build_visiontransformer_backbone(cfg, input_shape):
-    """
-    """
-    model = ViT(
-       
+    return ViT(
+        img_size=cfg.MODEL.VIT.INPUT_SIZE,
+        patch_size=cfg.MODEL.VIT.PATCH_SIZE,
+        embed_dim=cfg.MODEL.VIT.EMBED_DIM,
+        depth=cfg.MODEL.VIT.DEPTH,
+        num_heads=cfg.MODEL.VIT.NUM_HEADS,
+        drop_path_rate=cfg.MODEL.VIT.DROP_PATH_RATE,
+        window_size=14,
+        mlp_ratio=4,
+        qkv_bias=True,
+        norm_layer=partial(nn.LayerNorm, eps=1e-6),
+        window_block_indexes=[
+            # 2, 5, 8 11 for global attention
+            0,
+            1,
+            3,
+            4,
+            6,
+            7,
+            9,
+            10,
+        ],
+        residual_block_indexes=[],
+        use_rel_pos=True, # vitdet rel_pos 사용
+        out_feature=cfg.MODEL.VIT.OUT_FEATURE,
     )
-    # print('Initializing', config['pretrained'])
-    model.init_weights(config['pretrained'])
-    return model
