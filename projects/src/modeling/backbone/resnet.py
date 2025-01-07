@@ -17,6 +17,7 @@ from detectron2.layers import (
 
 from detectron2.modeling.backbone import Backbone
 from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
+from adapter import Adapter
 
 __all__ = [
     "ResNetBlockBase",
@@ -28,19 +29,6 @@ __all__ = [
     "make_stage",
     "build_resnet_backbone",
 ]
-
-class Adapter(nn.Module):
-    def __init__(self, in_planes, out_planes, r=32, mode='parallel'):
-        super(Adapter, self).__init__()
-        self.down_proj = nn.Conv2d(in_planes, in_planes // r, 1, bias=True)
-        self.non_linear_func = nn.ReLU()
-        self.up_proj = nn.Conv2d(in_planes // r, out_planes, 1, bias=True)
-        nn.init.kaiming_uniform_(self.down_proj.weight, a=math.sqrt(5))
-        nn.init.zeros_(self.up_proj.weight)
-        nn.init.zeros_(self.down_proj.bias)
-        nn.init.zeros_(self.up_proj.bias)
-    def forward(self, x):
-        return self.up_proj(self.non_linear_func(self.down_proj(x)))
 
 class BasicBlock(CNNBlockBase):
     """
