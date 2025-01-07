@@ -197,7 +197,7 @@ class BottleneckBlock(CNNBlockBase):
         #########################################################
         self.adapter_mode = adapter_mode
 
-        if adapter_mode:
+        if adapter_mode == 'peft':
             self.adapter = Adapter(bottleneck_channels, out_channels, adapter_ratio)
         #########################################################
 
@@ -227,7 +227,7 @@ class BottleneckBlock(CNNBlockBase):
         else:
             shortcut = x
 
-        out = out + shortcut if not self.adapter_mode else out + shortcut + self.adapter(out_tmp)
+        out = out + shortcut if not self.adapter_mode == 'peft' else out + shortcut + self.adapter(out_tmp)
         out += shortcut
         out = F.relu_(out)
         return out
