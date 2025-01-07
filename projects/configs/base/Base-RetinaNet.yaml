@@ -1,7 +1,7 @@
 MODEL:
   META_ARCHITECTURE: "RetinaNet"
   BACKBONE:
-    NAME: "build_retinanet_resnet_fpn_backbone"
+    NAME: "build_custom_retinanet_resnet_fpn_backbone"
   RESNETS:
     OUT_FEATURES: ["res3", "res4", "res5"]
   ANCHOR_GENERATOR:

@@ -23,6 +23,8 @@ from detectron2.modeling.backbone.backbone import Backbone
 
 from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
 
+# from adapter import VIT_Adapter as Adapter
+
 _to_2tuple = nn.modules.utils._ntuple(2)
 
 __all__ = ["build_swintransformer_backbone"]
@@ -305,6 +307,8 @@ class SwinTransformerBlock(nn.Module):
 
         self.H = None
         self.W = None
+
+        # self.adapter = Adapter()
 
     def forward(self, x, mask_matrix):
         """Forward function.
