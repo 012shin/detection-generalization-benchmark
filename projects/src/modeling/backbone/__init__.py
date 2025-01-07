@@ -2,3 +2,4 @@ from .fpn import build_fcos_resnet_fpn_backbone, build_swintransformer_fpn_backb
 from .swintransformer import build_swintransformer_backbone
 from .convnext import build_convnext_backbone
 from .vit import build_visiontransformer_backbone,SimpleFeaturePyramid
+from .resnet import build_custom_resnet_backbone

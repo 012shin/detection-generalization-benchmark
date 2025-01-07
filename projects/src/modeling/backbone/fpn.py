@@ -9,6 +9,7 @@ from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
 from .swintransformer import build_swintransformer_backbone
 from .convnext import build_convnext_backbone
 from .vit import build_visiontransformer_backbone,SimpleFeaturePyramid
+from .resnet import build_custom_resnet_backbone
 
 __all__ = ["build_fcos_resnet_fpn_backbone", "build_swintransformer_fpn_backbone, build_convnext_fpn_backbone,build_vit_fpn_backbone"]
 
@@ -73,7 +74,7 @@ def build_fcos_resnet_fpn_backbone(cfg, input_shape: ShapeSpec):
     Returns:
         backbone (Backbone): backbone module, must be a subclass of :class:`Backbone`.
     """
-    bottom_up = build_resnet_backbone(cfg, input_shape)
+    bottom_up = build_custom_resnet_backbone(cfg, input_shape)
     in_features = cfg.MODEL.FPN.IN_FEATURES
     out_channels = cfg.MODEL.FPN.OUT_CHANNELS
     top_levels = cfg.MODEL.FCOS.TOP_LEVELS
