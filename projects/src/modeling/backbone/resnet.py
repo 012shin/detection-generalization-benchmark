@@ -17,7 +17,7 @@ from detectron2.layers import (
 
 from detectron2.modeling.backbone import Backbone
 from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
-from adapter import Adapter
+from .adapter import Adapter
 
 __all__ = [
     "ResNetBlockBase",

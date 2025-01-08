@@ -23,7 +23,7 @@ from detectron2.modeling.backbone.backbone import Backbone
 
 from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
 
-# from adapter import VIT_Adapter as Adapter
+from .adapter import VIT_Adapter as Adapter
 
 _to_2tuple = nn.modules.utils._ntuple(2)
 
@@ -261,6 +261,7 @@ class SwinTransformerBlock(nn.Module):
 
     def __init__(
         self,
+        cfg,
         dim,
         num_heads,
         window_size=7,
@@ -308,7 +309,14 @@ class SwinTransformerBlock(nn.Module):
         self.H = None
         self.W = None
 
-        # self.adapter = Adapter()
+        self.adapter_mode = cfg.MODEL.BACKBONE.ADAPTER.MODE
+
+        self.adapter = Adapter(d_model=dim,
+                               bottleneck=dim//cfg.MODEL.BACKBONE.ADAPTER.RATIO,
+                               init_option=cfg.MODEL.BACKBONE.ADAPTER.FFN_ADAPTER_INIT_OPTION,
+                               adapter_scalar=cfg.MODEL.BACKBONE.ADAPTER.FFN_ADAPTER_SCALAR,
+                               adapter_layernorm_option=cfg.MODEL.BACKBONE.ADAPTER.FFN_ADAPTER_LAYERNORM_OPTION
+                               )
 
     def forward(self, x, mask_matrix):
         """Forward function.
@@ -366,9 +374,15 @@ class SwinTransformerBlock(nn.Module):
 
         x = x.view(B, H * W, C)
 
-        # FFN
+        # FFN4
         x = shortcut + self.drop_path(x)
-        x = x + self.drop_path(self.mlp(self.norm2(x)))
+
+        ################################################################
+        if self.adapter_mode == 'peft':
+            adapt_x = self.adapter(x, add_residual=False)
+
+        x = x + self.drop_path(self.mlp(self.norm2(x))) + adapt_x
+        ################################################################
 
         return x
 
@@ -436,6 +450,7 @@ class BasicLayer(nn.Module):
 
     def __init__(
         self,
+        cfg,
         dim,
         depth,
         num_heads,
@@ -460,6 +475,7 @@ class BasicLayer(nn.Module):
         self.blocks = nn.ModuleList(
             [
                 SwinTransformerBlock(
+                    cfg=cfg,
                     dim=dim,
                     num_heads=num_heads,
                     window_size=window_size,
@@ -604,6 +620,7 @@ class SwinTransformer(Backbone):
 
     def __init__(
         self,
+        cfg=None,
         pretrain_img_size=224,
         patch_size=4,
         in_chans=3,
@@ -667,6 +684,7 @@ class SwinTransformer(Backbone):
         self.layers = nn.ModuleList()
         for i_layer in range(self.num_layers):
             layer = BasicLayer(
+                cfg=cfg,
                 dim=int(embed_dim * 2**i_layer),
                 depth=depths[i_layer],
                 num_heads=num_heads[i_layer],
@@ -700,7 +718,7 @@ class SwinTransformer(Backbone):
         self._out_feature_strides = {"p{}".format(i): 2 ** (i + 2) for i in self.out_indices}
         self._size_devisibility = 32
 
-        self.apply(self._init_weights)
+        # self.apply(self._init_weights)
 
     def _freeze_stages(self):
         if self.frozen_stages >= 0:
@@ -719,14 +737,14 @@ class SwinTransformer(Backbone):
                 for param in m.parameters():
                     param.requires_grad = False
 
-    def _init_weights(self, m):
-        if isinstance(m, nn.Linear):
-            nn.init.trunc_normal_(m.weight, std=0.02)
-            if isinstance(m, nn.Linear) and m.bias is not None:
-                nn.init.constant_(m.bias, 0)
-        elif isinstance(m, nn.LayerNorm):
-            nn.init.constant_(m.bias, 0)
-            nn.init.constant_(m.weight, 1.0)
+    # def _init_weights(self, m):
+    #     if isinstance(m, nn.Linear):
+    #         nn.init.trunc_normal_(m.weight, std=0.02)
+    #         if isinstance(m, nn.Linear) and m.bias is not None:
+    #             nn.init.constant_(m.bias, 0)
+    #     elif isinstance(m, nn.LayerNorm):
+    #         nn.init.constant_(m.bias, 0)
+    #         nn.init.constant_(m.weight, 1.0)
 
     @property
     def size_divisibility(self):
@@ -748,14 +766,9 @@ class SwinTransformer(Backbone):
                 nn.init.constant_(m.bias, 0)
                 nn.init.constant_(m.weight, 1.0)
 
-        if isinstance(pretrained, str):
+        if pretrained is None:
             self.apply(_init_weights)
-            # load_checkpoint(self, pretrained, strict=False)
-        elif pretrained is None:
-            self.apply(_init_weights)
-        else:
-            raise TypeError('pretrained must be a str or None')
-        
+
     def forward(self, x):
         """Forward function."""
         x = self.patch_embed(x)
@@ -792,6 +805,7 @@ def build_swintransformer_backbone(cfg, input_shape):
     config = size2config[cfg.MODEL.SWIN.SIZE]
     out_indices = cfg.MODEL.SWIN.OUT_FEATURES
     model = SwinTransformer(
+        cfg = cfg,
         embed_dim=config['embed_dim'],
         window_size=config['window_size'],
         depths=config['depth'],

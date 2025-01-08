@@ -10,7 +10,6 @@ import torch.nn as nn
 
 class VIT_Adapter(nn.Module):
     def __init__(self,
-                 config=None,
                  d_model=None,
                  bottleneck=None,
                  dropout=0.0,
@@ -18,8 +17,8 @@ class VIT_Adapter(nn.Module):
                  adapter_scalar="1.0",
                  adapter_layernorm_option="in"):
         super().__init__()
-        self.n_embd = config.d_model if d_model is None else d_model
-        self.down_size = config.attn_bn if bottleneck is None else bottleneck
+        self.n_embd = d_model
+        self.down_size = bottleneck
 
         #_before
         self.adapter_layernorm_option = adapter_layernorm_option
@@ -41,11 +40,10 @@ class VIT_Adapter(nn.Module):
         if init_option == "bert":
             raise NotImplementedError
         elif init_option == "lora":
-            with torch.no_grad():
-                nn.init.kaiming_uniform_(self.down_proj.weight, a=math.sqrt(5))
-                nn.init.zeros_(self.up_proj.weight)
-                nn.init.zeros_(self.down_proj.bias)
-                nn.init.zeros_(self.up_proj.bias)
+            nn.init.kaiming_uniform_(self.down_proj.weight, a=math.sqrt(5))
+            nn.init.zeros_(self.up_proj.weight)
+            nn.init.zeros_(self.down_proj.bias)
+            nn.init.zeros_(self.up_proj.bias)
 
     def forward(self, x, add_residual=True, residual=None):
         residual = x if residual is None else residual
