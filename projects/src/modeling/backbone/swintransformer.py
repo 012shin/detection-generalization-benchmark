@@ -380,8 +380,9 @@ class SwinTransformerBlock(nn.Module):
         ################################################################
         if self.adapter_mode == 'peft':
             adapt_x = self.adapter(x, add_residual=False)
-
-        x = x + self.drop_path(self.mlp(self.norm2(x))) + adapt_x
+            x = x + self.drop_path(self.mlp(self.norm2(x))) + adapt_x
+        else:
+            x = x + self.drop_path(self.mlp(self.norm2(x)))
         ################################################################
 
         return x
