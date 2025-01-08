@@ -18,7 +18,7 @@ import numpy as np
 from detectron2.modeling.backbone import Backbone
 from detectron2.modeling.backbone.build import BACKBONE_REGISTRY
 from detectron2.modeling.backbone.fpn import FPN
-
+from .adapter import Adapter
 
 __all__ = ["build_convnext_backbone"]
 
@@ -33,7 +33,7 @@ class Block(nn.Module):
         drop_path (float): Stochastic depth rate. Default: 0.0
         layer_scale_init_value (float): Init value for Layer Scale. Default: 1e-6.
     """
-    def __init__(self, dim, drop_path=0., layer_scale_init_value=1e-6):
+    def __init__(self, dim, drop_path=0., layer_scale_init_value=1e-6, adapter_mode="ft", adapter_ratio=32):
         super().__init__()
         self.dwconv = nn.Conv2d(dim, dim, kernel_size=7, padding=3, groups=dim) # depthwise conv
         self.norm = LayerNorm(dim, eps=1e-6)
@@ -43,6 +43,13 @@ class Block(nn.Module):
         self.gamma = nn.Parameter(layer_scale_init_value * torch.ones((dim)), 
                                     requires_grad=True) if layer_scale_init_value > 0 else None
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
+        
+        ########Adapter######################
+        self.adapter_mode = adapter_mode
+        self.adapter_ratio = adapter_ratio
+        
+        if adapter_mode == 'peft':
+            self.adapter = Adapter(dim, dim, adapter_ratio)
 
     def forward(self, x):
         input = x
@@ -56,7 +63,11 @@ class Block(nn.Module):
             x = self.gamma * x
         x = x.permute(0, 3, 1, 2) # (N, H, W, C) -> (N, C, H, W)
 
-        x = input + self.drop_path(x)
+        if self.adapter_mode == 'peft':
+            adapt_x = self.adapter(x)
+            x = input + self.drop_path(x) + adapt_x
+        else:
+            x = input + self.drop_path(x)
         return x
 
 class ConvNeXt(Backbone):
@@ -74,7 +85,7 @@ class ConvNeXt(Backbone):
         out_features (tuple(int)): Stage numbers of the outputs given to the Neck.
     """
     def __init__(self, in_chans=3, depths=[3, 3, 9, 3], dims=[96, 192, 384, 768], 
-                 drop_path_rate=0., layer_scale_init_value=1e-6, out_features=None):
+                 drop_path_rate=0., layer_scale_init_value=1e-6, out_features=None, adapter_mode="ft", adapter_ratio=32):
         super().__init__()
 
         self.downsample_layers = nn.ModuleList() # stem and 3 intermediate downsampling conv layers
@@ -102,13 +113,20 @@ class ConvNeXt(Backbone):
         self._out_feature_channels = {}
 
         self.stages = nn.ModuleList() # 4 feature resolution stages, each consisting of multiple residual blocks
+        
+        ###############Adaptor###################
+        self.adapter_mode = adapter_mode
+        self.adapter_ratio = adapter_ratio
+
         dp_rates=[x.item() for x in torch.linspace(0, drop_path_rate, sum(depths))] 
         cur = 0
         strides = [4,4,4,4] 
         for i in range(4):
             stage = nn.Sequential(
                 *[Block(dim=dims[i], drop_path=dp_rates[cur + j], 
-                layer_scale_init_value=layer_scale_init_value) for j in range(depths[i])]
+                layer_scale_init_value=layer_scale_init_value,
+                adapter_mode=self.adapter_mode,
+                adapter_ratio=self.adapter_ratio) for j in range(depths[i])]
             )
             self.stages.append(stage)
             cur += depths[i]
@@ -122,7 +140,7 @@ class ConvNeXt(Backbone):
             layer_name = f'norm{i_layer}'
             self.add_module(layer_name, layer)
 
-        self.apply(self._init_weights)
+        # self.apply(self._init_weights)
 
     def _init_weights(self, m):
         if isinstance(m, (nn.Conv2d, nn.Linear)):
@@ -205,5 +223,7 @@ def build_convnext_backbone(cfg, input_shape):
         dims=cfg.MODEL.CONVNEXT.DIMS,
         drop_path_rate=cfg.MODEL.CONVNEXT.DROP_PATH_RATE,
         layer_scale_init_value=cfg.MODEL.CONVNEXT.LAYER_SCALE_INIT_VALUE,
-        out_features=cfg.MODEL.CONVNEXT.OUT_FEATURES
+        out_features=cfg.MODEL.CONVNEXT.OUT_FEATURES,
+        adapter_mode=cfg.MODEL.BACKBONE.ADAPTER.MODE,
+        adapter_ratio=cfg.MODEL.BACKBONE.ADAPTER.RATIO
     )
