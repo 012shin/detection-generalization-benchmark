@@ -310,13 +310,14 @@ class SwinTransformerBlock(nn.Module):
         self.W = None
 
         self.adapter_mode = cfg.MODEL.BACKBONE.ADAPTER.MODE
-
-        self.adapter = Adapter(d_model=dim,
-                               bottleneck=dim//cfg.MODEL.BACKBONE.ADAPTER.RATIO,
-                               init_option=cfg.MODEL.BACKBONE.ADAPTER.FFN_ADAPTER_INIT_OPTION,
-                               adapter_scalar=cfg.MODEL.BACKBONE.ADAPTER.FFN_ADAPTER_SCALAR,
-                               adapter_layernorm_option=cfg.MODEL.BACKBONE.ADAPTER.FFN_ADAPTER_LAYERNORM_OPTION
-                               )
+        
+        if self.adapter_mode == 'peft':
+            self.adapter = Adapter(d_model=dim,
+                                   bottleneck=dim//cfg.MODEL.BACKBONE.ADAPTER.RATIO,
+                                   init_option=cfg.MODEL.BACKBONE.ADAPTER.FFN_ADAPTER_INIT_OPTION,
+                                   adapter_scalar=cfg.MODEL.BACKBONE.ADAPTER.FFN_ADAPTER_SCALAR,
+                                   adapter_layernorm_option=cfg.MODEL.BACKBONE.ADAPTER.FFN_ADAPTER_LAYERNORM_OPTION
+                                   )
 
     def forward(self, x, mask_matrix):
         """Forward function.
