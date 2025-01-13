@@ -17,7 +17,8 @@ from detectron2.data.transforms import TransformGen
 
 from .corruption.augmix_aug import augmentations
 from .corruption.augmix_aug import apply_op
-from .corruption.augmix_aug import augmentation_map  
+
+from .corruption.corruptions import corruption_map  
 
 
 
@@ -201,8 +202,8 @@ class CorruptionMapper:
         self.proposal_topk          = precomputed_proposal_topk
         self.recompute_boxes        = recompute_boxes
         if eval_aug is not None:
-            if eval_aug in augmentation_map:
-                self.eval_aug = augmentation_map[eval_aug]  # 매핑 테이블에서 함수 가져오기
+            if eval_aug in corruption_map:
+                self.eval_aug = corruption_map[eval_aug]  # 매핑 테이블에서 함수 가져오기
             else:
                 raise ValueError(f"Unknown augmentation type: {eval_aug}")
         else:

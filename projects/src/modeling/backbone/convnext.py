@@ -140,7 +140,7 @@ class ConvNeXt(Backbone):
             layer_name = f'norm{i_layer}'
             self.add_module(layer_name, layer)
 
-        # self.apply(self._init_weights)
+        # self.apply(self._init_weights) 
 
     def _init_weights(self, m):
         if isinstance(m, (nn.Conv2d, nn.Linear)):

@@ -23,6 +23,32 @@ from pkg_resources import resource_filename
 warnings.simplefilter("ignore", UserWarning)
 
 
+def getOptimalKernelWidth1D(radius, sigma):
+    return radius * 2 + 1
+
+
+def getMotionBlurKernel(width, sigma):
+    k = gauss_function(np.arange(width), 0, sigma)
+    Z = np.sum(k)
+    return k/Z
+
+def shift(image, dx, dy):
+    if(dx < 0):
+        shifted = np.roll(image, shift=image.shape[1]+dx, axis=1)
+        shifted[:,dx:] = shifted[:,dx-1:dx]
+    elif(dx > 0):
+        shifted = np.roll(image, shift=dx, axis=1)
+        shifted[:,:dx] = shifted[:,dx:dx+1]
+    else:
+        shifted = image
+
+    if(dy < 0):
+        shifted = np.roll(shifted, shift=image.shape[0]+dy, axis=0)
+        shifted[dy:,:] = shifted[dy-1:dy,:]
+    elif(dy > 0):
+        shifted = np.roll(shifted, shift=dy, axis=0)
+        shifted[:dy,:] = shifted[dy:dy+1,:]
+    return shifted
 
 def disk(radius, alias_blur=0.1, dtype=np.float32):
     if radius <= 8:
@@ -224,23 +250,41 @@ def defocus_blur(x, severity=1):
 
     return np.clip(channels, 0, 1) * 255
 
+def _motion_blur(x, radius, sigma, angle):
+    width = getOptimalKernelWidth1D(radius, sigma)
+    kernel = getMotionBlurKernel(width, sigma)
+    point = (width * np.sin(np.deg2rad(angle)), width * np.cos(np.deg2rad(angle)))
+    hypot = math.hypot(point[0], point[1])
 
-# def motion_blur(x, severity=1):
-#     c = [(10, 3), (15, 5), (15, 8), (15, 12), (20, 15)][severity - 1]
+    blurred = np.zeros_like(x, dtype=np.float32)
+    for i in range(width):
+        dy = -math.ceil(((i*point[0]) / hypot) - 0.5)
+        dx = -math.ceil(((i*point[1]) / hypot) - 0.5)
+        if (np.abs(dy) >= x.shape[0] or np.abs(dx) >= x.shape[1]):
+            # simulated motion exceeded image borders
+            break
+        shifted = shift(x, dx, dy)
+        blurred = blurred + kernel[i] * shifted
+    return blurred
 
-#     output = BytesIO()
-#     x.save(output, format='PNG')
-#     x = MotionImage(blob=output.getvalue())
 
-#     x.motion_blur(radius=c[0], sigma=c[1], angle=np.random.uniform(-45, 45))
+def motion_blur(x, severity=1):
+    shape = np.array(x).shape
+    severity = min(5, severity)
+    c = [(10, 3), (15, 5), (15, 8), (15, 12), (20, 15)][severity - 1]
+    x = np.array(x)
 
-#     x = cv2.imdecode(np.fromstring(x.make_blob(), np.uint8),
-#                      cv2.IMREAD_UNCHANGED)
+    angle = np.random.uniform(-45, 45)
+    x = _motion_blur(x, radius=c[0], sigma=c[1], angle=angle)
 
-#     if x.shape != (224, 224):
-#         return np.clip(x[..., [2, 1, 0]], 0, 255)  # BGR to RGB
-#     else:  # greyscale to RGB
-#         return np.clip(np.array([x, x, x]).transpose((1, 2, 0)), 0, 255)
+    if len(x.shape) < 3 or x.shape[2] < 3:
+        gray = np.clip(np.array(x).transpose((0, 1)), 0, 255)
+        if len(shape) >= 3 or shape[2] >= 3:
+            return np.stack([gray, gray, gray], axis=2)
+        else:
+            return gray
+    else:
+        return np.clip(x, 0, 255)
 
 
 def zoom_blur(x, severity=1):
@@ -466,3 +510,22 @@ def elastic_transform(image, severity=1):
 
 
 # /////////////// End Corruptions ///////////////
+
+
+corruption_map = {
+    "gaussian_noise": gaussian_noise,
+    "shot_noise": shot_noise,
+    "impulse_noise": impulse_noise,
+    "defocus_blur": defocus_blur,
+    "glass_blur": glass_blur,  
+    "motion_blur": motion_blur,
+    "zoom_blur": zoom_blur,  
+    "spatter": spatter,
+    "frost": frost, 
+    "fog": fog,
+    "brightness": brightness,
+    "contrast": contrast,
+    "elastic_transform": elastic_transform, 
+    "pixelate": pixelate,
+    "jpeg_compression": jpeg_compression,
+}

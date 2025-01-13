@@ -144,7 +144,7 @@ def apply_corruption_test_resume(cfg, model):
     # Load completed tasks
     base_dir = "inference"
     filename = os.path.basename(cfg.OUTPUT_DIR)
-    results_file = os.path.join(base_dir, filename)
+    results_file = os.path.join(base_dir, f"{filename}.csv")
     completed_tasks = set()
     if os.path.exists(results_file):
         with open(results_file, "r") as csv_file:
