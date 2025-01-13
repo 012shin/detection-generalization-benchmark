@@ -506,22 +506,3 @@ augmentations_all = [
     autocontrast, equalize, posterize, rotate, solarize, shear_x, shear_y,
     translate_x, translate_y, color, contrast, brightness, sharpness
 ]
-# augmix_aug.py
-augmentation_map = {
-    "gaussian_noise": gaussian_noise,
-    "shot_noise": shot_noise,
-    "impulse_noise": impulse_noise,
-    "defocus_blur": defocus_blur,
-    "glass_blur": glass_blur,  
-    "motion_blur": motion_blur,
-    "zoom_blur": zoom_blur,  
-    # "snow": snow,
-    "frost": frost, 
-    "fog": fog,
-    "brightness": brightness,
-    "contrast": contrast,
-    "elastic_transform": elastic_transform, 
-    "pixelate": pixelate,
-    "jpeg_compression": jpeg,
-}
-
