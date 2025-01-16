@@ -216,7 +216,6 @@ class BottleneckBlock(CNNBlockBase):
             shortcut = x
 
         out = out + shortcut if not self.adapter_mode == 'peft' else out + shortcut + self.adapter(out_tmp)
-        out += shortcut
         out = F.relu_(out)
         return out
 
