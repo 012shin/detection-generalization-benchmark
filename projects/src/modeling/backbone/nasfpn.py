@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from torch import nn
 from detectron2.layers import Conv2d, ShapeSpec, get_norm
 from detectron2.modeling import Backbone, BACKBONE_REGISTRY
-from .fpn import LastLevelP6, LastLevelP6P7, build_custom_resnet_backbone
+from .fpn import LastLevelP6, LastLevelP6P7, LastLevelMaxPool, build_custom_resnet_backbone
 import os
 
 class SumCell(nn.Module):
@@ -281,9 +281,9 @@ class NASFPN(Backbone):
             )
             for name in self._out_features
         }
-    
+
 @BACKBONE_REGISTRY.register()
-def build_fcos_resnet_nasfpn_backbone(cfg, input_shape: ShapeSpec):
+def build_custom_resnet_nasfpn_backbone(cfg, input_shape: ShapeSpec):
     """
     Args:
         cfg: a detectron2 CfgNode
@@ -294,21 +294,13 @@ def build_fcos_resnet_nasfpn_backbone(cfg, input_shape: ShapeSpec):
     bottom_up = build_custom_resnet_backbone(cfg, input_shape)
     in_features = cfg.MODEL.FPN.IN_FEATURES
     out_channels = cfg.MODEL.FPN.OUT_CHANNELS
-    top_levels = cfg.MODEL.FCOS.TOP_LEVELS
-    in_channels_top = out_channels
-    if top_levels == 2:
-        top_block = LastLevelP6P7(in_channels_top, out_channels, "p5")
-    if top_levels == 1:
-        top_block = LastLevelP6(in_channels_top, out_channels, "p5")
-    elif top_levels == 0:
-        top_block = None
     backbone = NASFPN(
         bottom_up=bottom_up,
-        backbone_type="res",
+        backbone_type='res',
         in_features=in_features,
         out_channels=out_channels,
         norm=cfg.MODEL.FPN.NORM,
-        top_block=top_block,
+        top_block=LastLevelMaxPool(),
         fuse_type=cfg.MODEL.FPN.FUSE_TYPE,
     )
     return backbone

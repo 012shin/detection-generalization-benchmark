@@ -1,0 +1,32 @@
+MODEL:
+  META_ARCHITECTURE: "RetinaNet"
+  BACKBONE:
+    NAME: "build_custom_retinanet_resnet_fpn_backbone"
+    ADAPTER:
+      MODE: 'ft'
+  RESNETS:
+    DEPTH: 50
+    OUT_FEATURES: ["res3", "res4", "res5"]
+  ANCHOR_GENERATOR:
+    SIZES: !!python/object/apply:eval ["[[x, x * 2**(1.0/3), x * 2**(2.0/3) ] for x in [32, 64, 128, 256, 512 ]]"]
+  FPN:
+    IN_FEATURES: ["res3", "res4", "res5"]
+  RETINANET:
+    IOU_THRESHOLDS: [0.4, 0.5]
+    IOU_LABELS: [0, -1, 1]
+    SMOOTH_L1_LOSS_BETA: 0.0
+  WEIGHTS: "detectron2://ImageNetPretrained/torchvision/R-50.pkl"
+DATASETS:
+  TRAIN: ('voc_2007_trainval', 'voc_2012_trainval')
+  TEST: ('voc_2007_test',)
+SOLVER:
+  IMS_PER_BATCH: 16
+  BASE_LR: 0.01  # Note that RetinaNet uses a different default learning rate
+  STEPS: (12000, 16000)
+  MAX_ITER: 18000  # 17.4 epochs
+  WARMUP_ITERS: 100
+INPUT:
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+TEST: 
+  EVAL_PERIOD: 1000
+VERSION: 2

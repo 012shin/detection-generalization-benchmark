@@ -21,7 +21,6 @@ import cv2
 import math
 
 # corruption function add
-from src.data.corruption.corruptions import frost,elastic_transform,shot_noise,zoom_blur,glass_blur
 IMAGE_SIZE = 32
 MEAN = np.array([[[102.9801, 115.9465, 122.7717]]])
 

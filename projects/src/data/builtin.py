@@ -20,3 +20,22 @@ from detectron2.data import DatasetCatalog, MetadataCatalog
 from .builtin_meta import _get_builtin_metadata
 from detectron2.data.datasets.coco import register_coco_instances
 from detectron2.data.datasets.pascal_voc import register_pascal_voc
+
+def register_all_pascal_voc(root):
+    SPLITS = [
+        ("clipart_2012_val", "clipart", "test"),
+        ("clipart_2012_test", "clipart", "test"),
+        ("clipart_2012_train", "clipart", "train"),
+        ("water_2012_train", "VOC_Water", "train"),
+        ("water_2012_test", "VOC_Water", "test"),
+        ("comic_2012_val", "comic", "test"),
+        ("comic_2012_train", "comic", "train"),
+
+    ]
+    for name, dirname, split in SPLITS:
+        year = 2007 if "2007" in name else 2012
+        register_pascal_voc(name, os.path.join(root, dirname), split, year)
+        MetadataCatalog.get(name).evaluator_type = "pascal_voc"
+
+_root = os.getenv("DETECTRON2_DATASETS", "/home/dataset/detectron2")
+register_all_pascal_voc(_root)

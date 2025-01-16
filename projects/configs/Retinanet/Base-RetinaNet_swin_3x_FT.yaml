@@ -1,0 +1,32 @@
+MODEL:
+  META_ARCHITECTURE: "RetinaNet"
+  WEIGHTS: "/home/huiwon/detection/detectron2/models/swin_tiny_patch4_window7_224.pkl"
+  BACKBONE:
+    NAME: "build_swintransformer_fpn_backbone"
+    ADAPTER:
+      MODE: 'ft'
+  SWIN:
+    SIZE: T
+  ANCHOR_GENERATOR:
+    SIZES: !!python/object/apply:eval ["[[x, x * 2**(1.0/3), x * 2**(2.0/3) ] for x in [32, 64, 128, 256, 512 ]]"]
+  RETINANET:
+    IOU_THRESHOLDS: [0.4, 0.5]
+    IOU_LABELS: [0, -1, 1]
+    SMOOTH_L1_LOSS_BETA: 0.0
+    IN_FEATURES : ["p2", "p3", "p4", "p5", "p6"]
+  FPN:
+    IN_FEATURES: ["p0", "p1", "p2", "p3" ]
+DATASETS:
+  TRAIN: ("coco_2017_train",)
+  TEST: ("coco_2017_val",)
+SOLVER:
+  IMS_PER_BATCH: 16
+  BASE_LR: 0.0001
+  OPTIMIZER: ADAMW
+  STEPS: (210000, 250000)
+  MAX_ITER: 270000
+INPUT:
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+TEST: 
+  EVAL_PERIOD: 10000
+VERSION: 2

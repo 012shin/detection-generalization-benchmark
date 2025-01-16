@@ -3,19 +3,20 @@ MODEL:
   BACKBONE:
     NAME: "build_fcos_resnet_nasfpn_backbone"
     ADAPTER:
-        MODE: 'peft'
-    FREEZE_AT: 1
+        MODE: 'ft'
   RESNETS:
     DEPTH: 50
-    OUT_FEATURES: ["res3", "res4", "res5"]
+    OUT_FEATURES: ["res2", "res3", "res4", "res5"]
   FPN:
-    IN_FEATURES: ["res3", "res4", "res5"]
+    IN_FEATURES: ["res2", "res3", "res4", "res5"]
   PROPOSAL_GENERATOR:
     NAME: "FCOS"
   WEIGHTS: "detectron2://ImageNetPretrained/torchvision/R-50.pkl"
   # PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
-  ROI_HEADS:
+  FCOS:
     NUM_CLASSES: 20
+  FCOS:
+    IN_FEATURES: ["p2", "p3", "p4", "p5", "p6"]
 DATASETS:
   TRAIN: ('voc_2007_trainval', 'voc_2012_trainval')
   TEST: ('voc_2007_test',)

@@ -86,10 +86,7 @@ def apply_corruption_test(cfg, model):
         writer.writerow(["Dataset", "Noise Type", "Severity", "Metric", "Value"])
 
     if cfg.TEST.NOISE_ALL:
-        corruptions = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
-                       "glass_blur", "zoom_blur", "motion_blur", "frost", "fog",
-                       "brightness", "contrast", "elastic_transform", "pixelate",
-                       "jpeg_compression"] #"snow" ImageMagick issue 로 삭제
+        corruptions = ["fog"] #"snow" ImageMagick issue 로 삭제
         range_sev = [1, 2, 3, 4, 5]
         for corrupt in corruptions:
             for sev in range_sev:
@@ -157,10 +154,11 @@ def apply_corruption_test_resume(cfg, model):
     # Prepare for inference
     results = OrderedDict()
     logger = logging.getLogger("gdet_training")
-    corruptions = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
-                   "glass_blur", "zoom_blur", "motion_blur", "frost", "fog",
-                   "brightness", "contrast", "elastic_transform", "pixelate",
-                   "jpeg_compression"]
+    # corruptions = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
+    #                "glass_blur", "zoom_blur", "motion_blur", "frost", "fog",
+    #                "brightness", "contrast", "elastic_transform", "pixelate",
+    #                "jpeg_compression"]
+    corruptions = ["fog"]
     range_sev = [1, 2, 3, 4, 5]
 
     for corrupt in corruptions:

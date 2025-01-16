@@ -3,8 +3,7 @@ MODEL:
   BACKBONE:
     NAME: "build_fcos_resnet_fpn_backbone"
     ADAPTER:
-        MODE: 'peft'
-    FREEZE_AT: 1
+        MODE: "ft"
   RESNETS:
     DEPTH: 50
     OUT_FEATURES: ["res3", "res4", "res5"]
@@ -13,15 +12,13 @@ MODEL:
   PROPOSAL_GENERATOR:
     NAME: "FCOS"
   WEIGHTS: "detectron2://ImageNetPretrained/torchvision/R-50.pkl"
-  # PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
-  ROI_HEADS:
+  FCOS:
     NUM_CLASSES: 20
+  # PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
 DATASETS:
   TRAIN: ('voc_2007_trainval', 'voc_2012_trainval')
   TEST: ('voc_2007_test',)
 SOLVER:
-  IMS_PER_BATCH: 1
-  BASE_LR: 0.01  # Note that RetinaNet uses a different default learning rate
   STEPS: (12000, 16000)
   MAX_ITER: 18000  # 17.4 epochs
   WARMUP_ITERS: 100
@@ -29,4 +26,6 @@ INPUT:
   MIN_SIZE_TRAIN: (480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800)
   MIN_SIZE_TEST: 800
 TEST: 
-  EVAL_PERIOD: 1000
+  EVAL_PERIOD: 10000
+OUTPUT_DIR: "training_dir/base-fcos-pascal-ft
+"

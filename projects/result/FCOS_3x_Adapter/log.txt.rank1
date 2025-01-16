@@ -1,0 +1,99 @@
+[01/16 14:17:17] detectron2 INFO: Rank of current process: 1. World size: 4
+[01/16 14:17:20] detectron2 INFO: Environment info:
+-------------------------------  ----------------------------------------------------------------------------------------
+sys.platform                     linux
+Python                           3.10.0 (default, Mar  3 2022, 09:58:08) [GCC 7.5.0]
+numpy                            1.23.5
+detectron2                       0.6 @/home/huiwon/.conda/envs/project1/lib/python3.10/site-packages/detectron2
+Compiler                         GCC 11.4
+CUDA compiler                    CUDA 12.5
+detectron2 arch flags            8.9
+DETECTRON2_ENV_MODULE            <not set>
+PyTorch                          2.5.1+cu124 @/home/huiwon/.conda/envs/project1/lib/python3.10/site-packages/torch
+PyTorch debug build              False
+torch._C._GLIBCXX_USE_CXX11_ABI  False
+GPU available                    Yes
+GPU 0,1,2,3                      NVIDIA RTX 6000 Ada Generation (arch=8.9)
+Driver version                   550.100
+CUDA_HOME                        /usr/local/cuda-12.5
+Pillow                           11.0.0
+torchvision                      0.20.1+cu124 @/home/huiwon/.conda/envs/project1/lib/python3.10/site-packages/torchvision
+torchvision arch flags           5.0, 6.0, 7.0, 7.5, 8.0, 8.6, 9.0
+fvcore                           0.1.5.post20221221
+iopath                           0.1.9
+cv2                              4.10.0
+-------------------------------  ----------------------------------------------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.5.3 (Git Hash 66f0cb9eb66affd2da3bf5f8d897376f04aae6af)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX512
+  - CUDA Runtime 12.4
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 90.1
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=12.4, CUDNN_VERSION=9.1.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DLIBKINETO_NOXPUPTI=ON -DUSE_FBGEMM -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wsuggest-override -Wno-psabi -Wno-error=old-style-cast -Wno-missing-braces -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.5.1, USE_CUDA=ON, USE_CUDNN=ON, USE_CUSPARSELT=1, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, 
+
+[01/16 14:17:20] detectron2 INFO: Command line arguments: Namespace(config_file='/home/huiwon/detection/detection-generalization-benchmark/projects/configs/FCOS/PASCAL/fcos/Base-FCOS_1x_Res_PEFT.yaml', resume=False, eval_only=True, num_gpus=4, num_machines=1, machine_rank=0, dist_url='tcp://127.0.0.1:48518', opts=['MODEL.WEIGHTS', '/home/huiwon/detection/detection-generalization-benchmark/projects/training_dir/PASCAL/fcos/R_50_FPN_PEFT_1x_TEST2/model_final.pth', 'OUTPUT_DIR', 'result/FCOS_3x_Adapter'])
+[01/16 14:17:20] detectron2 INFO: Contents of args.config_file=/home/huiwon/detection/detection-generalization-benchmark/projects/configs/FCOS/PASCAL/fcos/Base-FCOS_1x_Res_PEFT.yaml:
+MODEL:
+  META_ARCHITECTURE: "OneStageDetector"
+  BACKBONE:
+    NAME: "build_fcos_resnet_fpn_backbone"
+    ADAPTER:
+        MODE: 'peft'
+  RESNETS:
+    DEPTH: 50
+    OUT_FEATURES: ["res3", "res4", "res5"]
+  FPN:
+    IN_FEATURES: ["res3", "res4", "res5"]
+  PROPOSAL_GENERATOR:
+    NAME: "FCOS"
+  WEIGHTS: "detectron2://ImageNetPretrained/torchvision/R-50.pkl"
+  # PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
+  FCOS:
+    NUM_CLASSES: 20
+DATASETS:
+  TRAIN: ('voc_2007_trainval', 'voc_2012_trainval')
+  TEST: ('clipart_2012_test',)
+SOLVER:
+  IMS_PER_BATCH: 16
+  BASE_LR: 0.01  # Note that RetinaNet uses a different default learning rate
+  STEPS: (12000, 16000)
+  MAX_ITER: 18000  # 17.4 epochs
+  WARMUP_ITERS: 100
+INPUT:
+  MIN_SIZE_TRAIN: (480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800)
+  MIN_SIZE_TEST: 800
+TEST: 
+  EVAL_PERIOD: 1000
+[01/16 14:17:20] detectron2.utils.env INFO: Using a generated random seed 20957314
+[01/16 14:17:25] detectron2.checkpoint.detection_checkpoint INFO: [DetectionCheckpointer] Loading from /home/huiwon/detection/detection-generalization-benchmark/projects/training_dir/PASCAL/fcos/R_50_FPN_PEFT_1x_TEST2/model_final.pth ...
+[01/16 14:17:25] fvcore.common.checkpoint INFO: [Checkpointer] Loading from /home/huiwon/detection/detection-generalization-benchmark/projects/training_dir/PASCAL/fcos/R_50_FPN_PEFT_1x_TEST2/model_final.pth ...
+[01/16 14:17:26] detectron2.data.build INFO: Distribution of instances among all 20 categories:
+[36m|  category   | #instances   |  category   | #instances   |  category  | #instances   |
+|:-----------:|:-------------|:-----------:|:-------------|:----------:|:-------------|
+|  aeroplane  | 41           |   bicycle   | 16           |    bird    | 124          |
+|    boat     | 74           |   bottle    | 74           |    bus     | 8            |
+|     car     | 84           |     cat     | 23           |   chair    | 163          |
+|     cow     | 21           | diningtable | 50           |    dog     | 24           |
+|    horse    | 34           |  motorbike  | 10           |   person   | 566          |
+| pottedplant | 94           |    sheep    | 33           |    sofa    | 21           |
+|    train    | 26           |  tvmonitor  | 40           |            |              |
+|    total    | 1526         |             |              |            |              |[0m
+[01/16 14:17:26] detectron2.data.dataset_mapper INFO: [DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(800, 800), max_size=1333, sample_style='choice')]
+[01/16 14:17:26] detectron2.data.common INFO: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[01/16 14:17:26] detectron2.data.common INFO: Serializing 500 elements to byte tensors and concatenating them all ...
+[01/16 14:17:26] detectron2.data.common INFO: Serialized dataset takes 0.24 MiB
+[01/16 14:17:26] detectron2.evaluation.evaluator INFO: Start inference on 125 batches
+[01/16 14:17:37] detectron2.evaluation.evaluator INFO: Inference done 11/125. Dataloading: 0.0044 s/iter. Inference: 0.2767 s/iter. Eval: 0.0011 s/iter. Total: 0.2822 s/iter. ETA=0:00:32
+[01/16 14:17:42] detectron2.evaluation.evaluator INFO: Inference done 32/125. Dataloading: 0.0053 s/iter. Inference: 0.2457 s/iter. Eval: 0.0014 s/iter. Total: 0.2524 s/iter. ETA=0:00:23
+[01/16 14:17:47] detectron2.evaluation.evaluator INFO: Inference done 53/125. Dataloading: 0.0058 s/iter. Inference: 0.2415 s/iter. Eval: 0.0012 s/iter. Total: 0.2486 s/iter. ETA=0:00:17
+[01/16 14:17:52] detectron2.evaluation.evaluator INFO: Inference done 76/125. Dataloading: 0.0057 s/iter. Inference: 0.2331 s/iter. Eval: 0.0012 s/iter. Total: 0.2401 s/iter. ETA=0:00:11
+[01/16 14:17:57] detectron2.evaluation.evaluator INFO: Inference done 102/125. Dataloading: 0.0057 s/iter. Inference: 0.2216 s/iter. Eval: 0.0012 s/iter. Total: 0.2286 s/iter. ETA=0:00:05
+[01/16 14:18:04] detectron2.evaluation.evaluator INFO: Total inference time: 0:00:28.460070 (0.237167 s / iter per device, on 4 devices)
+[01/16 14:18:04] detectron2.evaluation.evaluator INFO: Total inference pure compute time: 0:00:25 (0.216324 s / iter per device, on 4 devices)

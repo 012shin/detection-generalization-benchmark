@@ -34,10 +34,11 @@ from detectron2.evaluation import (
     COCOPanopticEvaluator,
     DatasetEvaluators,
     LVISEvaluator,
-    PascalVOCDetectionEvaluator,
     SemSegEvaluator,
     verify_results,
 )
+from src.evaluator import PascalVOCDetectionEvaluator
+
 from detectron2.modeling import GeneralizedRCNNWithTTA
 
 # from src.data import SparseRCNNDatasetMapper
@@ -133,6 +134,8 @@ class Trainer(DefaultTrainer):
 
     @classmethod
     def build_optimizer(cls, cfg, model):
+        logger = logging.getLogger("trained parameter")
+
         params: List[Dict[str, Any]] = []
         memo: Set[torch.nn.parameter.Parameter] = set()
         # fully fine-tuning
@@ -149,7 +152,7 @@ class Trainer(DefaultTrainer):
                 if "backbone" in key:
                     lr = lr * cfg.SOLVER.BACKBONE_MULTIPLIER
                 params += [{"params": [value], "lr": lr, "weight_decay": weight_decay}]
-                print(key) 
+                logger.info(str(key)) 
         # adapter
         elif cfg.MODEL.BACKBONE.ADAPTER.MODE == 'peft':
             for key, value in model.named_parameters(recurse=True):
@@ -157,12 +160,12 @@ class Trainer(DefaultTrainer):
                     continue
                 if not value.requires_grad:
                     continue
-                if 'adapter' in key or 'proposal_generator' in key or 'top_block' in key or 'fpn_lateral' in key or 'fpn_output' in key:
+                if 'adapter' in key or 'proposal_generator' in key or 'top_block' in key or 'fpn_lateral' in key or 'fpn_output' in key or 'roi_heads' in key or 'fpn_stages' in key or 'head' in key:
                     memo.add(value)
                     lr = cfg.SOLVER.BASE_LR
                     weight_decay = cfg.SOLVER.WEIGHT_DECAY
                     params += [{"params": [value], "lr": lr, "weight_decay": weight_decay}]
-                    print(key)
+                    logger.info(str(key))
         # decoder probing
         else:
             for key, value in model.named_parameters(recurse=True):
@@ -170,12 +173,12 @@ class Trainer(DefaultTrainer):
                     continue
                 if not value.requires_grad:
                     continue
-                if 'proposal_generator' in key or 'top_block' in key or 'fpn_lateral' in key or 'fpn_output' in key:
+                if 'proposal_generator' in key or 'top_block' in key or 'fpn_lateral' in key or 'fpn_output' in key or 'roi_heads' in key or 'fpn_stages' in key or 'head' in key:
                     memo.add(value)
                     lr = cfg.SOLVER.BASE_LR
                     weight_decay = cfg.SOLVER.WEIGHT_DECAY
                     params += [{"params": [value], "lr": lr, "weight_decay": weight_decay}]
-                    print(key)
+                    logger.info(str(key))
  
         def maybe_add_full_model_gradient_clipping(optim):  # optim: the optimizer class
             # detectron2 doesn't have full model gradient clipping now

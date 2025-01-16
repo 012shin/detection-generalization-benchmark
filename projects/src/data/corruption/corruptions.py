@@ -19,6 +19,7 @@ from scipy.ndimage.interpolation import map_coordinates
 import warnings
 import os
 from pkg_resources import resource_filename
+from .augmix_aug import fog
 
 warnings.simplefilter("ignore", UserWarning)
 
@@ -314,7 +315,7 @@ def zoom_blur(x, severity=1):
     return np.clip(x, 0, 1) * 255
 
 
-def fog(x, severity=1):
+def fog_(x, severity=1):
     c = [(1.5, 2), (2., 2), (2.5, 1.7), (2.5, 1.5), (3., 1.4)][severity - 1]
 
     x = np.array(x) / 255.
