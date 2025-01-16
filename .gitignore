@@ -5,10 +5,9 @@ projects/output/
 projects/models/
 projects/build/
 projects/inference/
-
-# Ignore metadata files
+projects/result/
 projects/detection_generalization_benchmark.egg-info/
-
+projects/configs/
 # ───────────────────── Python Specific ─────────────────────
 # Ignore compiled Python files and caches
 **/__pycache__/
