@@ -80,21 +80,11 @@ Basic training command:
 cd projects
 python tools/train_net.py --config-file configs/[detector]/[backbone]/config.yaml --num-gpus 8
 
-text
-
-Examples:
-Train Faster R-CNN + ResNet combination
-python tools/train_net.py --config-file configs/faster-rcnn/resnet/faster_rcnn_R_50_FPN_1x.yaml --num-gpus 8
-
-Train DETR + ViT combination
-python tools/train_net.py --config-file configs/detr/vit/detr_vit_base.yaml --num-gpus 8
-
-text
 
 ### 2. Evaluation
 
 Evaluate trained models:
-python tools/corruption_test.py --config-file configs/[detector]/[backbone]/config.yaml --eval-only MODEL.WEIGHTS path/to/model.pth
+python tools/train_net.py --config-file configs/[detector]/[backbone]/config.yaml --eval-only MODEL.WEIGHTS path/to/model.pth
 
 text
 
@@ -126,23 +116,6 @@ url={https://github.com/012shin/detection-generalization-benchmark}
 For questions or bug reports about this project, please submit through GitHub Issues.
 
 ---
-
-## 🏗️ Project Structure
-
-detection-generalization-benchmark/
-├── configs/ # Configuration files
-│ ├── base/
-│ ├── faster-rcnn/
-│ ├── retinanet/
-│ └── ...
-├── projects/ # Main project code
-│ ├── tools/
-│ │ ├── train_net.py
-│ │ └── corruption_test.py
-│ └── setup.py
-├── detectron2/ # Detectron2 framework
-├── README.md
-└── LICENSE
 
 ## 🔍 Evaluation Metrics
 
